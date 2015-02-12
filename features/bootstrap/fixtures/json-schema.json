@@ -1,0 +1,29 @@
+{
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-03/schema",
+    "required": [
+        "foo"
+    ],
+    "properties": {
+        "foo": {
+            "type": "string",
+            "required": true
+        },
+        "foofoo": {
+            "type": "boolean",
+            "required": true
+        },
+        "fooint": {
+            "type": "integer",
+            "required": true
+        },
+        "foos": {
+            "type": "array",
+            "required":true,
+            "maxItems": 2
+        },
+        "fooo": {
+            "type": "object"
+        }
+    }
+}

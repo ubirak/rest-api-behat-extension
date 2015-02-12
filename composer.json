@@ -1,0 +1,37 @@
+{
+    "name": "rezzza/json-api-behat-extension",
+    "type": "behat-extension",
+    "description": "Json Api Extension for Behat",
+    "keywords": ["api", "json", "rest", "test"],
+    "license": "MIT",
+    "homepage": "https://github.com/rezzza/json-api-behat-extension",
+    "authors": [
+        {
+            "name": "Community contributors",
+            "homepage": "https://github.com/rezzza/json-api-behat-extension/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Rezzza\\JsonApiBehatExtension\\": "src/" }
+    },
+    "require": {
+        "php": ">=5.3.2",
+        "behat/behat": "~2.5.0",
+        "atoum/atoum": "~1.0",
+        "guzzle/http": "~3.9",
+        "symfony/property-access": "~2.4",
+        "justinrainbow/json-schema": "~1.3"
+    },
+    "require-dev": {
+        "silex/silex": "~1.0",
+        "symfony/process": "~2.1"
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

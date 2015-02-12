@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="rezzza.json_api.json_storage" class="Rezzza\JsonApiBehatExtension\Json\JsonStorage" />
+
+        <service id="rezzza.json_api.json_storage.initializer" class="Rezzza\JsonApiBehatExtension\Json\JsonStorageInitializer">
+            <argument type="service" id="rezzza.json_api.json_storage" />
+            <tag name="behat.context.initializer" />
+        </service>
+    </services>
+</container>
