@@ -37,6 +37,14 @@ class JsonContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * @Then /^the response should be in JSON$/
+     */
+    public function responseShouldBeInJson()
+    {
+        $this->readJson();
+    }
+
+    /**
      * @Then /^the JSON node "(?P<jsonNode>[^"]*)" should be equal to "(?P<expectedValue>.*)"$/
      */
     public function theJsonNodeShouldBeEqualTo($jsonNode, $expectedValue)
