@@ -86,6 +86,18 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * Set login / password for next HTTP authentication
+     *
+     * @When /^I set basic authentication with "(?P<username>[^"]*)" and "(?P<password>[^"]*)"$/
+     */
+    public function iSetBasicAuthenticationWithAnd($username, $password)
+    {
+        $this->removeHeader('Authorization');
+        $this->authorization = base64_encode($username . ':' . $password);
+        $this->addHeader('Authorization', 'Basic ' . $this->authorization);
+    }
+
+    /**
      * @Then print response
      */
     public function printResponse()
@@ -142,5 +154,12 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         $this->request = $this->httpClient->createRequest($method, $url, $this->headers, $body);
         // Reset headers used for the HTTP request
         $this->headers = array();
+    }
+
+    protected function removeHeader($headerName)
+    {
+        if (array_key_exists($headerName, $this->headers)) {
+            unset($this->headers[$headerName]);
+        }
     }
 }
