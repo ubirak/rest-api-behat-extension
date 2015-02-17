@@ -29,7 +29,7 @@ class JsonInspector
         try {
             return $json->read($expression, $this->propertyAccessor);
         } catch (\Exception $e) {
-            throw new \Exception(sprintf('Failed to evaluate expression "%s"', $expression));
+            throw new \Exception(sprintf('Failed to evaluate expression "%s"', $expression, 0, $e));
         }
     }
 
