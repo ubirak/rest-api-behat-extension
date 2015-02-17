@@ -94,9 +94,9 @@ class JsonContext extends BehatContext implements JsonStorageAware
     public function theJsonNodeShouldExist($jsonNode)
     {
         try {
-            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->evaluateJsonNodeValue($jsonNode);
         } catch (\Exception $e) {
-            throw new \Exception(sprintf("The node '%s' does not exist.", $jsonNode));
+            throw new \Exception(sprintf("The node '%s' does not exist.", $jsonNode), 0, $e);
         }
     }
 
@@ -112,6 +112,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
         try {
             $realValue = $this->evaluateJsonNodeValue($jsonNode);
         } catch (\Exception $e) {
+            // If the node does not exist an exception should be throwed
         }
 
         if ($e === null) {
