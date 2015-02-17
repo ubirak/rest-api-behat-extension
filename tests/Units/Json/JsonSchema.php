@@ -40,7 +40,7 @@ class JsonSchema extends atoum
             )
                 ->mock($resolver)
                     ->call('resolve')
-                    ->withArguments('{}', 'file://test')
+                    ->withArguments(new \stdClass, 'file://test')
                     ->once()
 
                 ->object($result)
