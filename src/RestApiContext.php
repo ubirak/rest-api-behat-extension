@@ -7,7 +7,6 @@ use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Client as HttpClient;
-
 use Rezzza\JsonApiBehatExtension\Json\JsonStorage;
 use Rezzza\JsonApiBehatExtension\Json\JsonStorageAware;
 
@@ -56,7 +55,6 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      *
      * @param string $method request method
      * @param string $url relative url
-     * @param PyStringNode $string request body
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
      */
@@ -130,6 +128,11 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         }
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param PyStringNode $body
+     */
     private function sendRequest($method, $url, $body = null)
     {
         $this->createRequest($method, $url, $body);
@@ -156,6 +159,9 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         $this->headers = array();
     }
 
+    /**
+     * @param string $headerName
+     */
     protected function removeHeader($headerName)
     {
         if (array_key_exists($headerName, $this->headers)) {
