@@ -3,6 +3,8 @@ For now we only support **Behat 2.x**
 
 [![Build Status](https://travis-ci.org/rezzza/json-api-behat-extension.png?branch=master)](https://travis-ci.org/rezzza/json-api-behat-extension)
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/json-api-behat-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/json-api-behat-extension/?branch=master)
+
 ## Install
 Don't forget to load the extension in your `behat.yml` :
 ```yaml
