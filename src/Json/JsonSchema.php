@@ -25,7 +25,7 @@ class JsonSchema extends Json
             throw new \LogicException('Cannot resolve JsonSchema without uri parameter');
         }
 
-        $resolver->resolve($this->encode(false), $this->uri);
+        $resolver->resolve($this->getRawContent(), $this->uri);
 
         return $this;
     }

@@ -72,7 +72,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     {
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
-        $this->asserter->variable($actual)->isEqualTo($code);
+        $this->asserter->variable($actual)->isEqualTo($expected);
     }
 
     /**
@@ -91,8 +91,8 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     public function iSetBasicAuthenticationWithAnd($username, $password)
     {
         $this->removeHeader('Authorization');
-        $this->authorization = base64_encode($username . ':' . $password);
-        $this->addHeader('Authorization', 'Basic ' . $this->authorization);
+        $authorization = base64_encode($username . ':' . $password);
+        $this->addHeader('Authorization', 'Basic ' . $authorization);
     }
 
     /**
