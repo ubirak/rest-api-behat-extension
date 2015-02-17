@@ -142,7 +142,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
             $this->readJson(),
             new JsonSchema(
                 file_get_contents($filename),
-                'file://' . getcwd() . '/' . $filename
+                'file://' . $filename
             )
         );
     }
