@@ -101,26 +101,6 @@ class JsonContext extends BehatContext implements JsonStorageAware
     }
 
     /**
-     * Checks, that given JSON node does not exist
-     *
-     * @Given /^the JSON node "(?P<jsonNode>[^"]*)" should not exist$/
-     */
-    public function theJsonNodeShouldNotExist($jsonNode)
-    {
-        $e = null;
-
-        try {
-            $realValue = $this->evaluateJsonNodeValue($jsonNode);
-        } catch (\Exception $e) {
-            // If the node does not exist an exception should be throwed
-        }
-
-        if ($e === null) {
-            throw new \Exception(sprintf("The node '%s' exists and contains '%s'.", $jsonNode , json_encode($realValue)));
-        }
-    }
-
-    /**
      * @Then /^the JSON should be valid according to this schema:$/
      */
     public function theJsonShouldBeValidAccordingToThisSchema(PyStringNode $jsonSchemaContent)

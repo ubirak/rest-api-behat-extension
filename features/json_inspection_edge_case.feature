@@ -83,29 +83,6 @@ class FeatureContext extends BehatContext
         The node 'foo2' does not exist.
         """
 
-     Scenario: Testing the unexistence of existing json node
-        Given a file named "features/existing_json.feature" with:
-        """
-        Feature: Test unexistence of existing json node
-            In order to validate the inspection steps
-            As a context developer
-            I need to see a meanful exception when I try to ensure existing json node does not exist
-
-            Scenario:
-                When I load JSON:
-                '''
-                {
-                    "foo": "bar"
-                }
-                '''
-                Then the JSON node "foo" should not exist
-        """
-        When I run behat "features/existing_json.feature -f progress"
-        Then it should fail with:
-        """
-        The node 'foo' exists and contains '"bar"'.
-        """
-
     Scenario: Json schema validation failed
         Given a file named "features/failed_json_schema.feature" with:
         """

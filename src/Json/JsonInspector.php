@@ -14,10 +14,7 @@ class JsonInspector
     public function __construct($evaluationMode)
     {
         $this->evaluationMode = $evaluationMode;
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->enableExceptionOnInvalidIndex()
-            ->getPropertyAccessor()
-        ;
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()->getPropertyAccessor();
     }
 
     public function evaluate(Json $json, $expression)
