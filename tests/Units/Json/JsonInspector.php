@@ -27,7 +27,7 @@ class JsonInspector extends atoum
 
                 ->mock($json)
                     ->call('read')
-                    ->withArguments('foo.bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false, true))
+                    ->withArguments('foo.bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false))
                     ->once()
         ;
     }
@@ -68,7 +68,7 @@ class JsonInspector extends atoum
 
                 ->mock($json)
                     ->call('read')
-                    ->withArguments('foo.bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false, true))
+                    ->withArguments('foo.bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false))
                     ->once()
         ;
     }
@@ -92,7 +92,7 @@ class JsonInspector extends atoum
 
                 ->mock($json)
                     ->call('read')
-                    ->withArguments('foo->bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false, true))
+                    ->withArguments('foo->bar', new \Symfony\Component\PropertyAccess\PropertyAccessor(false))
                     ->once()
         ;
     }

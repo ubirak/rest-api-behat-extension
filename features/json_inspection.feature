@@ -50,11 +50,6 @@ Feature: Test json inspection payload
         And the JSON node "foos[1]" should exist
         And the JSON node "fooo.foo" should exist
 
-    Scenario: Json nodes should not exist
-        Then the JSON node "foo2" should not exist
-        And the JSON node "foos[2]" should not exist
-        And the JSON node "fooo.bar" should not exist
-
     Scenario: JSON should be valid against inline json schema
         Then the JSON should be valid according to this schema:
             """
