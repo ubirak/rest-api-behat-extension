@@ -76,6 +76,14 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * @Given /^I set "([^"]*)" header equal to "([^"]*)"$/
+     */
+    public function iSetHeaderEqualTo($headerName, $headerValue)
+    {
+        $this->setHeader($headerName, $headerValue);
+    }
+
+    /**
      * @Given /^I add "([^"]*)" header equal to "([^"]*)"$/
      */
     public function iAddHeaderEqualTo($headerName, $headerValue)
@@ -126,6 +134,19 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         } else {
             $this->headers[$name] = $value;
         }
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    protected function setHeader($name, $value)
+    {
+        if (isset($this->headers[$name])) {
+            unset($this->headers[$name]);
+        }
+
+        $this->addHeader($name, $value);
     }
 
     /**
