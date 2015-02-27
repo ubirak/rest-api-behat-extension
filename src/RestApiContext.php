@@ -121,6 +121,14 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
      * @param string $name
      * @param string $value
      */
@@ -137,15 +145,22 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * @param string $headerName
+     */
+    protected function removeHeader($headerName)
+    {
+        if (array_key_exists($headerName, $this->headers)) {
+            unset($this->headers[$headerName]);
+        }
+    }
+
+    /**
      * @param string $name
      * @param string $value
      */
     protected function setHeader($name, $value)
     {
-        if (isset($this->headers[$name])) {
-            unset($this->headers[$name]);
-        }
-
+        $this->removeHeader($name);
         $this->addHeader($name, $value);
     }
 
@@ -178,15 +193,5 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         $this->request = $this->httpClient->createRequest($method, $url, $this->headers, $body);
         // Reset headers used for the HTTP request
         $this->headers = array();
-    }
-
-    /**
-     * @param string $headerName
-     */
-    protected function removeHeader($headerName)
-    {
-        if (array_key_exists($headerName, $this->headers)) {
-            unset($this->headers[$headerName]);
-        }
     }
 }
