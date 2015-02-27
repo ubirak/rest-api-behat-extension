@@ -22,3 +22,20 @@ Feature: Test send API request
         """
         Then the JSON node "method" should be equal to "POST"
         And the JSON node "headers.content-type[0]" should be equal to "application/json"
+
+    Scenario: Add same header 2 times
+        Given I add "header" header equal to "value"
+        Given I add "header" header equal to "value2"
+        When I send a POST request to "echo"
+        Then the response status code should be 200
+        And the JSON node "headers.header" should have 1 element
+        And the JSON node "headers.header[0]" should be equal to "value, value2"
+
+    Scenario: Set same header 2 times
+        Given I set "header" header equal to "value"
+        Given I set "header" header equal to "value2"
+        When I send a POST request to "echo"
+        Then the response status code should be 200
+        And the JSON node "headers.header" should have 1 element
+        And the JSON node "headers.header[0]" should be equal to "value2"
+
