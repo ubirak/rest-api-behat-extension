@@ -14,26 +14,35 @@ class RestApiContext extends BehatContext implements JsonStorageAware
 {
     private $asserter;
 
+    /** @var HttpClient */
     private $httpClient;
 
+    /** @var array|\Guzzle\Http\Message\RequestInterface */
     private $request;
 
+    /** @var \Guzzle\Http\Message\Response|array */
     private $response;
 
-    private $headers = array();
+    /** @var array */
+    private $requestHeaders = array();
 
+    /** @var bool */
     private $enableJsonInspection = true;
 
+    /** @var JsonStorage */
     private $jsonStorage;
 
     public function __construct(HttpClient $httpClient, $asserter, $enableJsonInspection)
     {
-        $this->headers = array();
+        $this->requestHeaders = array();
         $this->httpClient = $httpClient;
         $this->asserter = $asserter;
         $this->enableJsonInspection = (bool) $enableJsonInspection;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setJsonStorage(JsonStorage $jsonStorage)
     {
         $this->jsonStorage = $jsonStorage;
@@ -53,10 +62,13 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     /**
      * Sends HTTP request to specific URL with raw body from PyString.
      *
-     * @param string $method request method
-     * @param string $url relative url
+     * @param string       $method request method
+     * @param string       $url relative url
+     * @param PyStringNode $body
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
+     * @throws BadResponseException
+     * @throws \Exception
      */
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
@@ -80,7 +92,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSetHeaderEqualTo($headerName, $headerValue)
     {
-        $this->setHeader($headerName, $headerValue);
+        $this->setRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -88,7 +100,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iAddHeaderEqualTo($headerName, $headerValue)
     {
-        $this->addHeader($headerName, $headerValue);
+        $this->addRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -98,9 +110,9 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSetBasicAuthenticationWithAnd($username, $password)
     {
-        $this->removeHeader('Authorization');
+        $this->removeRequestHeader('Authorization');
         $authorization = base64_encode($username . ':' . $password);
-        $this->addHeader('Authorization', 'Basic ' . $authorization);
+        $this->addRequestHeader('Authorization', 'Basic ' . $authorization);
     }
 
     /**
@@ -121,36 +133,61 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     }
 
     /**
+     * @return array|\Guzzle\Http\Message\RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return array|\Guzzle\Http\Message\Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * @return array
+     * @deprecated BC Alias, prefer using getRequestHeaders()
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->getRequestHeaders();
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequestHeaders()
+    {
+        return $this->requestHeaders;
     }
 
     /**
      * @param string $name
      * @param string $value
      */
-    protected function addHeader($name, $value)
+    protected function addRequestHeader($name, $value)
     {
-        if (isset($this->headers[$name])) {
-            if (!is_array($this->headers[$name])) {
-                $this->headers[$name] = array($this->headers[$name]);
+        if (isset($this->requestHeaders[$name])) {
+            if (!is_array($this->requestHeaders[$name])) {
+                $this->requestHeaders[$name] = array($this->requestHeaders[$name]);
             }
-            $this->headers[$name][] = $value;
+            $this->requestHeaders[$name][] = $value;
         } else {
-            $this->headers[$name] = $value;
+            $this->requestHeaders[$name] = $value;
         }
     }
 
     /**
      * @param string $headerName
      */
-    protected function removeHeader($headerName)
+    protected function removeRequestHeader($headerName)
     {
-        if (array_key_exists($headerName, $this->headers)) {
-            unset($this->headers[$headerName]);
+        if (array_key_exists($headerName, $this->requestHeaders)) {
+            unset($this->requestHeaders[$headerName]);
         }
     }
 
@@ -158,10 +195,10 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      * @param string $name
      * @param string $value
      */
-    protected function setHeader($name, $value)
+    protected function setRequestHeader($name, $value)
     {
-        $this->removeHeader($name);
-        $this->addHeader($name, $value);
+        $this->removeRequestHeader($name);
+        $this->addRequestHeader($name, $value);
     }
 
     /**
@@ -190,8 +227,8 @@ class RestApiContext extends BehatContext implements JsonStorageAware
 
     private function createRequest($method, $url, $body = null)
     {
-        $this->request = $this->httpClient->createRequest($method, $url, $this->headers, $body);
+        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body);
         // Reset headers used for the HTTP request
-        $this->headers = array();
+        $this->requestHeaders = array();
     }
 }
