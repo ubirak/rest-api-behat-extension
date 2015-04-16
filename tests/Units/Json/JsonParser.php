@@ -4,9 +4,9 @@ namespace Rezzza\JsonApiBehatExtension\Tests\Units\Json;
 
 use atoum;
 use JsonSchema\Validator;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector as SUT;
+use Rezzza\JsonApiBehatExtension\Json\JsonParser as SUT;
 
-class JsonInspector extends atoum
+class JsonParser extends atoum
 {
     public function test_should_read_json()
     {

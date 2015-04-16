@@ -3,29 +3,23 @@
 namespace Rezzza\JsonApiBehatExtension\Json;
 
 use mageekguy\atoum\asserter\generator as asserter;
-use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 
-class JsonContext extends BehatContext implements JsonStorageAware
+class JsonContext implements Context, SnippetAcceptingContext
 {
     private $jsonInspector;
 
     private $asserter;
 
-    private $jsonStorage;
-
     private $jsonSchemaBaseUrl;
 
-    public function __construct(JsonInspector $jsonInspector, asserter $asserter, $jsonSchemaBaseUrl = null)
+    public function __construct(JsonInspector $jsonInspector, $jsonSchemaBaseUrl = null)
     {
         $this->jsonInspector = $jsonInspector;
-        $this->asserter = $asserter;
+        $this->asserter = new asserter;
         $this->jsonSchemaBaseUrl = rtrim($jsonSchemaBaseUrl, '/');
-    }
-
-    public function setJsonStorage(JsonStorage $jsonStorage)
-    {
-        $this->jsonStorage = $jsonStorage;
     }
 
     /**
@@ -33,7 +27,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
      */
     public function iLoadJson(PyStringNode $jsonContent)
     {
-        $this->jsonStorage->writeRawContent($jsonContent);
+        $this->jsonInspector->writeJson((string) $jsonContent);
     }
 
     /**
@@ -41,7 +35,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
      */
     public function responseShouldBeInJson()
     {
-        $this->readJson();
+        $this->jsonInspector->readJson();
     }
 
     /**
@@ -125,8 +119,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
      */
     public function theJsonShouldBeValidAccordingToThisSchema(PyStringNode $jsonSchemaContent)
     {
-        $this->jsonInspector->validate(
-            $this->readJson(),
+        $this->jsonInspector->validateJson(
             new JsonSchema($jsonSchemaContent)
         );
     }
@@ -138,8 +131,7 @@ class JsonContext extends BehatContext implements JsonStorageAware
     {
         $filename = $this->resolveFilename($filename);
 
-        $this->jsonInspector->validate(
-            $this->readJson(),
+        $this->jsonInspector->validateJson(
             new JsonSchema(
                 file_get_contents($filename),
                 'file://' . $filename
@@ -165,18 +157,12 @@ class JsonContext extends BehatContext implements JsonStorageAware
 
     private function evaluateJsonNodeValue($jsonNode)
     {
-        $json = $this->readJson();
-
-        return $this->jsonInspector->evaluate($json, $jsonNode);
+        return $this->jsonInspector->readJsonNodeValue($jsonNode);
     }
 
     private function readJson()
     {
-        if (null === $this->jsonStorage) {
-            throw new \LogicException('No jsonStorage defined. Check your "setJsonStorage" method');
-        }
-
-        return $this->jsonStorage->readJson();
+        return $this->jsonInspector->readJson();
     }
 
     private function resolveFilename($filename)

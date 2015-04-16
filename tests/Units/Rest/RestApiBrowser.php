@@ -1,15 +1,15 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Tests\Units;
+namespace Rezzza\JsonApiBehatExtension\Tests\Units\Rest;
 
 use atoum;
-use Rezzza\JsonApiBehatExtension\RestApiContext as SUT;
+use Rezzza\JsonApiBehatExtension\Rest\RestApiBrowser as SUT;
 
 /**
  * @author Mikaël FIMA <mika@verylastroom.com>
  * @author Guillaume MOREL <guillaume.morel@verylastroom.com>
  */
-class RestApiContext extends atoum
+class RestApiBrowser extends atoum
 {
     /**
      * Adding headers
@@ -21,12 +21,12 @@ class RestApiContext extends atoum
             ->given(
                 $httpClient = $this->mockHttpClient(200)
             )
-            ->and($sut = new SUT($httpClient, null, false))
+            ->and($sut = new SUT($httpClient))
         ;
 
         foreach ($addHeadersSteps as $addHeadersStep) {
             foreach($addHeadersStep as $headerName => $headerValue) {
-                $this->and($sut->iAddHeaderEqualTo($headerName, $headerValue));
+                $this->and($sut->addRequestHeader($headerName, $headerValue));
             }
         }
 
@@ -59,7 +59,7 @@ class RestApiContext extends atoum
 
         foreach ($setHeadersSteps as $addHeadersStep) {
             foreach($addHeadersStep as $headerName => $headerValue) {
-                $this->and($sut->iSetHeaderEqualTo($headerName, $headerValue));
+                $this->and($sut->setRequestHeader($headerName, $headerValue));
             }
         }
 
@@ -88,11 +88,11 @@ class RestApiContext extends atoum
 
         $restApiContext = new SUT($mockHttpClient, null, false);
         foreach ($requestHeaders as $requestHeaderKey => $requestHeaderValue) {
-            $restApiContext->iAddHeaderEqualTo($requestHeaderKey, $requestHeaderValue);
+            $restApiContext->addRequestHeader($requestHeaderKey, $requestHeaderValue);
         }
 
         // When
-        $restApiContext->iSendARequest('GET', 'http://verylastroom.com/');
+        $restApiContext->sendRequest('GET', 'http://verylastroom.com/');
 
         // Then
         $request = $restApiContext->getRequest();
@@ -130,7 +130,7 @@ class RestApiContext extends atoum
         $restApiContext = new SUT($mockHttpClient, null, false);
 
         // When
-        $restApiContext->iSendARequest('GET', 'http://verylastroom.com/');
+        $restApiContext->sendRequest('GET', 'http://verylastroom.com/');
 
         // Then
         $response = $restApiContext->getResponse();

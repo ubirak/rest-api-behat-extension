@@ -1,3 +1,14 @@
 default:
+    suites:
+        default:
+            contexts:
+                - FeatureContext
+                - Rezzza\JsonApiBehatExtension\RestApiContext
+                - Rezzza\JsonApiBehatExtension\Json\JsonContext:
+                    jsonSchemaBaseUrl: %paths.base%/features/bootstrap
+
     extensions:
-        Rezzza\JsonApiBehatExtension\Extension: ~
+        Rezzza\JsonApiBehatExtension\Extension:
+            rest:
+                base_url: http://localhost:8888
+                store_response: true

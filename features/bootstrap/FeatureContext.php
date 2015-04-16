@@ -1,21 +1,16 @@
 <?php
 
-use Behat\Behat\Context\BehatContext;
-
 use mageekguy\atoum\asserter;
-use Guzzle\Http\Client as HttpClient;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-use Rezzza\JsonApiBehatExtension\RestApiContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector;
-
 /**
  * Test workflow totally copied from https://github.com/Behat/WebApiExtension/blob/master/features/bootstrap/FeatureContext.php
  */
-class FeatureContext extends BehatContext
+class FeatureContext implements Context, SnippetAcceptingContext
 {
     private $phpBin;
 
@@ -28,17 +23,6 @@ class FeatureContext extends BehatContext
     public function __construct()
     {
         $this->asserter = new asserter\generator();
-        $httpClient = new HttpClient('http://localhost:8888');
-        $jsonInspector = new \Rezzza\JsonApiBehatExtension\Json\JsonInspector('javascript');
-
-        $this->useContext(
-            'rest_api',
-            new RestApiContext($httpClient, $this->asserter, true)
-        );
-        $this->useContext(
-            'json',
-            new JsonContext($jsonInspector, $this->asserter, __DIR__)
-        );
     }
 
     /**
@@ -94,7 +78,7 @@ class FeatureContext extends BehatContext
             $this->phpBin,
             escapeshellarg(BEHAT_BIN_PATH),
             $argumentsString,
-            strtr('--no-ansi', array('\'' => '"', '"' => '\"'))
+            strtr('--no-colors', array('\'' => '"', '"' => '\"'))
         ));
         $this->process->start();
         $this->process->wait();
