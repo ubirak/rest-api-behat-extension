@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Rest;
+namespace Rezzza\RestApiBehatExtension\Rest;
 
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\ClientInterface as HttpClient;

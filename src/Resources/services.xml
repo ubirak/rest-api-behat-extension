@@ -3,17 +3,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="rezzza.json_api.json.json_storage" class="Rezzza\JsonApiBehatExtension\Json\JsonStorage" />
-        <service id="rezzza.json_api.json.json_parser" class="Rezzza\JsonApiBehatExtension\Json\JsonParser" public="false">
+        <service id="rezzza.json_api.json.json_storage" class="Rezzza\RestApiBehatExtension\Json\JsonStorage" />
+        <service id="rezzza.json_api.json.json_parser" class="Rezzza\RestApiBehatExtension\Json\JsonParser" public="false">
             <argument>javascript</argument>
         </service>
 
-        <service id="rezzza.json_api.json.json_inspector" class="Rezzza\JsonApiBehatExtension\Json\JsonInspector" public="false">
+        <service id="rezzza.json_api.json.json_inspector" class="Rezzza\RestApiBehatExtension\Json\JsonInspector" public="false">
             <argument type="service" id="rezzza.json_api.json.json_storage" />
             <argument type="service" id="rezzza.json_api.json.json_parser" />
         </service>
 
-        <service id="rezzza.json_api.json.json_inspector.resolver" class="Rezzza\JsonApiBehatExtension\Json\JsonInspectorResolver">
+        <service id="rezzza.json_api.json.json_inspector.resolver" class="Rezzza\RestApiBehatExtension\Json\JsonInspectorResolver">
             <argument type="service" id="rezzza.json_api.json.json_inspector" />
             <tag name="context.argument_resolver" />
         </service>
@@ -22,11 +22,11 @@
             <argument>%rezzza.json_api.rest.base_url%</argument>
         </service>
 
-        <service id="rezzza.json_api.rest.rest_api_browser" class="Rezzza\JsonApiBehatExtension\Rest\RestApiBrowser" public="false">
+        <service id="rezzza.json_api.rest.rest_api_browser" class="Rezzza\RestApiBehatExtension\Rest\RestApiBrowser" public="false">
             <argument type="service" id="rezzza.json_api.rest.http_client" />
         </service>
 
-        <service id="rezzza.json_api.rest.rest_api_browser.resolver" class="Rezzza\JsonApiBehatExtension\Rest\RestApiBrowserResolver">
+        <service id="rezzza.json_api.rest.rest_api_browser.resolver" class="Rezzza\RestApiBehatExtension\Rest\RestApiBrowserResolver">
             <argument type="service" id="rezzza.json_api.rest.rest_api_browser" />
             <tag name="context.argument_resolver" />
         </service>

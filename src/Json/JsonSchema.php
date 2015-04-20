@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use JsonSchema\RefResolver;
 use JsonSchema\Validator;

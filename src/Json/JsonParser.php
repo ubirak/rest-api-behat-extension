@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use JsonSchema\Validator;
 use Symfony\Component\PropertyAccess\PropertyAccess;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
-use Rezzza\JsonApiBehatExtension\Rest\ResponseStorage;
+use Rezzza\RestApiBehatExtension\Rest\ResponseStorage;
 
 /**
  * Store the JSON that we could analyze it in JsonContext

@@ -10,12 +10,12 @@ Feature: Test json inspection edge cases
             suites:
                 default:
                     contexts:
-                        - Rezzza\JsonApiBehatExtension\RestApiContext
-                        - Rezzza\JsonApiBehatExtension\Json\JsonContext:
+                        - Rezzza\RestApiBehatExtension\RestApiContext
+                        - Rezzza\RestApiBehatExtension\Json\JsonContext:
                             jsonSchemaBaseUrl: %paths.base%/features/bootstrap
 
             extensions:
-                Rezzza\JsonApiBehatExtension\Extension:
+                Rezzza\RestApiBehatExtension\Extension:
                     rest:
                         base_url: http://localhost:8888
                         store_response: true

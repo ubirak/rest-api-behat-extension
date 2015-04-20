@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use mageekguy\atoum\asserter\generator as asserter;
 use Behat\Behat\Context\Context;

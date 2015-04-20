@@ -1,10 +1,10 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Tests\Units\Json;
+namespace Rezzza\RestApiBehatExtension\Tests\Units\Json;
 
 use atoum;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Rezzza\JsonApiBehatExtension\Json\Json as SUT;
+use Rezzza\RestApiBehatExtension\Json\Json as SUT;
 
 class Json extends atoum
 {

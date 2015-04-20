@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension;
+namespace Rezzza\RestApiBehatExtension;
 
 use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
@@ -8,7 +8,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\ClientInterface as HttpClient;
-use Rezzza\JsonApiBehatExtension\Rest\RestApiBrowser;
+use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
 
 class RestApiContext implements Context, SnippetAcceptingContext
 {

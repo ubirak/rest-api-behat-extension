@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use Behat\Behat\Context\Argument\ArgumentResolver;
 
@@ -22,7 +22,7 @@ class JsonInspectorResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getClass() && $parameter->getClass()->name === 'Rezzza\JsonApiBehatExtension\Json\JsonInspector') {
+            if (null !== $parameter->getClass() && $parameter->getClass()->name === 'Rezzza\RestApiBehatExtension\Json\JsonInspector') {
                 $arguments[$parameter->name] = $this->jsonInspector;
             }
         }

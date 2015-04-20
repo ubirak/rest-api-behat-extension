@@ -2,7 +2,7 @@
 
 namespace Rest;
 
-namespace Rezzza\JsonApiBehatExtension\Rest;
+namespace Rezzza\RestApiBehatExtension\Rest;
 
 interface ResponseStorage
 {

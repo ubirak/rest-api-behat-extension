@@ -1,18 +1,18 @@
 {
-    "name": "rezzza/json-api-behat-extension",
+    "name": "rezzza/rest-api-behat-extension",
     "type": "behat-extension",
-    "description": "Json Api Extension for Behat",
+    "description": "Rest Api Extension for Behat",
     "keywords": ["api", "json", "rest", "test"],
     "license": "MIT",
-    "homepage": "https://github.com/rezzza/json-api-behat-extension",
+    "homepage": "https://github.com/rezzza/rest-api-behat-extension",
     "authors": [
         {
             "name": "Community contributors",
-            "homepage": "https://github.com/rezzza/json-api-behat-extension/contributors"
+            "homepage": "https://github.com/rezzza/rest-api-behat-extension/contributors"
         }
     ],
     "autoload": {
-        "psr-4": { "Rezzza\\JsonApiBehatExtension\\": "src/" }
+        "psr-4": { "Rezzza\\RestApiBehatExtension\\": "src/" }
     },
     "require": {
         "php": ">=5.3.2",
