@@ -1,5 +1,6 @@
 {
     "name": "rezzza/rest-api-behat-extension",
+    "replace": { "rezzza/json-api-behat-extension": "self.version" },
     "type": "behat-extension",
     "description": "Rest Api Extension for Behat",
     "keywords": ["api", "json", "rest", "test"],
