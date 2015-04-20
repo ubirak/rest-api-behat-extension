@@ -1,6 +1,6 @@
 # RestApiExtension for Behat
-[Branch behat2](https://github.com/rezzza/rest-api-behat-extension/tree/behat2) : **Behat 2.x**
-[Branch master](https://github.com/rezzza/rest-api-behat-extension/tree/master) : **Behat 3.x**
+* [Branch behat2](https://github.com/rezzza/rest-api-behat-extension/tree/behat-2.x) : **Behat 2.x**
+* [Branch master](https://github.com/rezzza/rest-api-behat-extension/tree/master) : **Behat 3.x**
 
 [![Build Status](https://travis-ci.org/rezzza/rest-api-behat-extension.png?branch=master)](https://travis-ci.org/rezzza/rest-api-behat-extension)
 
