@@ -1,9 +1,9 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Tests\Units\Json;
+namespace Rezzza\RestApiBehatExtension\Tests\Units\Json;
 
 use atoum;
-use Rezzza\JsonApiBehatExtension\Json\JsonSchema as SUT;
+use Rezzza\RestApiBehatExtension\Json\JsonSchema as SUT;
 
 class JsonSchema extends atoum
 {
@@ -53,7 +53,7 @@ class JsonSchema extends atoum
         $this
             ->given(
                 $sut = new SUT('{"schema": true}'),
-                $json = new \Rezzza\JsonApiBehatExtension\Json\Json('{"foo":"bar"}'),
+                $json = new \Rezzza\RestApiBehatExtension\Json\Json('{"foo":"bar"}'),
                 $validator = new \mock\JsonSchema\Validator,
                 $validator->getMockController()->check = true
             )
@@ -75,7 +75,7 @@ class JsonSchema extends atoum
         $this
             ->given(
                 $sut = new SUT('{}'),
-                $json = new \Rezzza\JsonApiBehatExtension\Json\Json('{}'),
+                $json = new \Rezzza\RestApiBehatExtension\Json\Json('{}'),
                 $validator = new \mock\JsonSchema\Validator,
                 $validator->getMockController()->check = false,
                 $validator->getMockController()->getErrors = array(

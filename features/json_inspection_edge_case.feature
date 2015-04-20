@@ -8,7 +8,7 @@ Feature: Test json inspection edge cases
         """
         default:
             extensions:
-                Rezzza\JsonApiBehatExtension\Extension: ~
+                Rezzza\RestApiBehatExtension\Extension: ~
         """
         And a file named "features/bootstrap/FeatureContext.php" with:
         """
@@ -19,9 +19,9 @@ use Behat\Behat\Context\BehatContext;
 use mageekguy\atoum\asserter;
 use Guzzle\Http\Client as HttpClient;
 
-use Rezzza\JsonApiBehatExtension\RestApiContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector;
+use Rezzza\RestApiBehatExtension\RestApiContext;
+use Rezzza\RestApiBehatExtension\Json\JsonContext;
+use Rezzza\RestApiBehatExtension\Json\JsonInspector;
 
 class FeatureContext extends BehatContext
 {
@@ -29,7 +29,7 @@ class FeatureContext extends BehatContext
     {
         $asserter = new asserter\generator();
         $httpClient = new HttpClient('http://localhost:8888');
-        $jsonInspector = new \Rezzza\JsonApiBehatExtension\Json\JsonInspector('javascript');
+        $jsonInspector = new \Rezzza\RestApiBehatExtension\Json\JsonInspector('javascript');
 
         $this->useContext(
             'rest_api',

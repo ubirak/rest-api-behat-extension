@@ -8,9 +8,9 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-use Rezzza\JsonApiBehatExtension\RestApiContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector;
+use Rezzza\RestApiBehatExtension\RestApiContext;
+use Rezzza\RestApiBehatExtension\Json\JsonContext;
+use Rezzza\RestApiBehatExtension\Json\JsonInspector;
 
 /**
  * Test workflow totally copied from https://github.com/Behat/WebApiExtension/blob/master/features/bootstrap/FeatureContext.php
@@ -29,7 +29,7 @@ class FeatureContext extends BehatContext
     {
         $this->asserter = new asserter\generator();
         $httpClient = new HttpClient('http://localhost:8888');
-        $jsonInspector = new \Rezzza\JsonApiBehatExtension\Json\JsonInspector('javascript');
+        $jsonInspector = new \Rezzza\RestApiBehatExtension\Json\JsonInspector('javascript');
 
         $this->useContext(
             'rest_api',

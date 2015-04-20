@@ -1,9 +1,9 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Tests\Units;
+namespace Rezzza\RestApiBehatExtension\Tests\Units;
 
 use atoum;
-use Rezzza\JsonApiBehatExtension\RestApiContext as SUT;
+use Rezzza\RestApiBehatExtension\RestApiContext as SUT;
 
 /**
  * @author Mikaël FIMA <mika@verylastroom.com>

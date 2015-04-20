@@ -1,14 +1,14 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension;
+namespace Rezzza\RestApiBehatExtension;
 
 use mageekguy\atoum\asserter;
 use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Client as HttpClient;
-use Rezzza\JsonApiBehatExtension\Json\JsonStorage;
-use Rezzza\JsonApiBehatExtension\Json\JsonStorageAware;
+use Rezzza\RestApiBehatExtension\Json\JsonStorage;
+use Rezzza\RestApiBehatExtension\Json\JsonStorageAware;
 
 class RestApiContext extends BehatContext implements JsonStorageAware
 {

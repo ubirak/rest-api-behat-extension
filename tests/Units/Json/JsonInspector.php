@@ -1,10 +1,10 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Tests\Units\Json;
+namespace Rezzza\RestApiBehatExtension\Tests\Units\Json;
 
 use atoum;
 use JsonSchema\Validator;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector as SUT;
+use Rezzza\RestApiBehatExtension\Json\JsonInspector as SUT;
 
 class JsonInspector extends atoum
 {
@@ -12,7 +12,7 @@ class JsonInspector extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\JsonApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -36,7 +36,7 @@ class JsonInspector extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\JsonApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read->throw = new \Exception()
             )
             ->and(
@@ -53,7 +53,7 @@ class JsonInspector extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\JsonApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -77,7 +77,7 @@ class JsonInspector extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\JsonApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -101,8 +101,8 @@ class JsonInspector extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\JsonApiBehatExtension\Json\Json('{}'),
-                $schema = new \mock\Rezzza\JsonApiBehatExtension\Json\JsonSchema('{}'),
+                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
+                $schema = new \mock\Rezzza\RestApiBehatExtension\Json\JsonSchema('{}'),
                 $schema->getMockController()->validate = 'foobar',
                 $sut = new SUT('foo')
             )

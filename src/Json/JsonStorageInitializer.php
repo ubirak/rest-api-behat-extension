@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use Behat\Behat\Context\Initializer\InitializerInterface;
 use Behat\Behat\Context\ContextInterface;

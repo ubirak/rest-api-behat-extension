@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension;
+namespace Rezzza\RestApiBehatExtension;
 
 use Behat\Behat\Extension\ExtensionInterface;
 use Symfony\Component\Config\FileLocator;

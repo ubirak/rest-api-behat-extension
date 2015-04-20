@@ -1,20 +1,20 @@
-# JsonApiExtension for Behat
+# RestApiExtension for Behat
 For now we only support **Behat 2.x**
 
-[![Build Status](https://travis-ci.org/rezzza/json-api-behat-extension.png?branch=master)](https://travis-ci.org/rezzza/json-api-behat-extension)
+[![Build Status](https://travis-ci.org/rezzza/rest-api-behat-extension.png?branch=master)](https://travis-ci.org/rezzza/rest-api-behat-extension)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/json-api-behat-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/json-api-behat-extension/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/rest-api-behat-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/rest-api-behat-extension/?branch=master)
 
 ## Install
 Don't forget to load the extension in your `behat.yml` :
 ```yaml
 default:
     extensions:
-        Rezzza\JsonApiBehatExtension\Extension: ~
+        Rezzza\RestApiBehatExtension\Extension: ~
 ```
 
 ## Usage
-Have a look to the [FeatureContext::__construct](https://github.com/rezzza/json-api-behat-extension/blob/master/features/bootstrap/FeatureContext.php#L28)
+Have a look to the [FeatureContext::__construct](https://github.com/rezzza/rest-api-behat-extension/blob/master/features/bootstrap/FeatureContext.php#L28)
 
 * `JsonContext` can be used alone without HTTP calls with the step `I load JSON:`
 * `RestApiContext` can be used alone if you pass `false` as third argument.
