@@ -7,40 +7,18 @@ Feature: Test json inspection edge cases
         Given a file named "behat.yml" with:
         """
         default:
+            suites:
+                default:
+                    contexts:
+                        - Rezzza\RestApiBehatExtension\RestApiContext
+                        - Rezzza\RestApiBehatExtension\Json\JsonContext:
+                            jsonSchemaBaseUrl: %paths.base%/features/bootstrap
+
             extensions:
-                Rezzza\JsonApiBehatExtension\Extension: ~
-        """
-        And a file named "features/bootstrap/FeatureContext.php" with:
-        """
-<?php
-
-use Behat\Behat\Context\BehatContext;
-
-use mageekguy\atoum\asserter;
-use Guzzle\Http\Client as HttpClient;
-
-use Rezzza\JsonApiBehatExtension\RestApiContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonContext;
-use Rezzza\JsonApiBehatExtension\Json\JsonInspector;
-
-class FeatureContext extends BehatContext
-{
-    public function __construct()
-    {
-        $asserter = new asserter\generator();
-        $httpClient = new HttpClient('http://localhost:8888');
-        $jsonInspector = new \Rezzza\JsonApiBehatExtension\Json\JsonInspector('javascript');
-
-        $this->useContext(
-            'rest_api',
-            new RestApiContext($httpClient, $asserter, true)
-        );
-        $this->useContext(
-            'json',
-            new JsonContext($jsonInspector, $asserter, __DIR__)
-        );
-    }
-}
+                Rezzza\RestApiBehatExtension\Extension:
+                    rest:
+                        base_url: http://localhost:8888
+                        store_response: true
         """
 
     Scenario: Reading json before loading json
@@ -57,7 +35,7 @@ class FeatureContext extends BehatContext
         When I run behat "features/read_json.feature -f progress"
         Then it should fail with:
         """
-        No content defined. You should use JsonContainer::setRawContent method to inject content you want to analyze
+        No content defined. You should use JsonStorage::writeRawContent method to inject content you want to analyze
         """
 
     Scenario: Testing the existence of unexisting json node

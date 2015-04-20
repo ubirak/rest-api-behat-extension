@@ -1,51 +1,25 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension;
+namespace Rezzza\RestApiBehatExtension;
 
 use mageekguy\atoum\asserter;
-use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Client as HttpClient;
-use Rezzza\JsonApiBehatExtension\Json\JsonStorage;
-use Rezzza\JsonApiBehatExtension\Json\JsonStorageAware;
+use Guzzle\Http\ClientInterface as HttpClient;
+use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
 
-class RestApiContext extends BehatContext implements JsonStorageAware
+class RestApiContext implements Context, SnippetAcceptingContext
 {
     private $asserter;
 
-    /** @var HttpClient */
-    private $httpClient;
+    private $restApiBrowser;
 
-    /** @var array|\Guzzle\Http\Message\RequestInterface */
-    private $request;
-
-    /** @var \Guzzle\Http\Message\Response|array */
-    private $response;
-
-    /** @var array */
-    private $requestHeaders = array();
-
-    /** @var bool */
-    private $enableJsonInspection = true;
-
-    /** @var JsonStorage */
-    private $jsonStorage;
-
-    public function __construct(HttpClient $httpClient, $asserter, $enableJsonInspection)
+    public function __construct(RestApiBrowser $restApiBrowser)
     {
-        $this->requestHeaders = array();
-        $this->httpClient = $httpClient;
-        $this->asserter = $asserter;
-        $this->enableJsonInspection = (bool) $enableJsonInspection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setJsonStorage(JsonStorage $jsonStorage)
-    {
-        $this->jsonStorage = $jsonStorage;
+        $this->restApiBrowser = $restApiBrowser;
+        $this->asserter = new asserter\generator;
     }
 
     /**
@@ -56,7 +30,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSendARequest($method, $url)
     {
-        $this->sendRequest($method, $url);
+        $this->restApiBrowser->sendRequest($method, $url);
     }
 
     /**
@@ -72,7 +46,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
-        $this->sendRequest($method, $url, $body);
+        $this->restApiBrowser->sendRequest($method, $url, (string) $body);
     }
 
     /**
@@ -83,7 +57,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     public function theResponseCodeShouldBe($code)
     {
         $expected = intval($code);
-        $actual = intval($this->response->getStatusCode());
+        $actual = intval($this->getResponse()->getStatusCode());
         $this->asserter->variable($actual)->isEqualTo($expected);
     }
 
@@ -92,7 +66,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSetHeaderEqualTo($headerName, $headerValue)
     {
-        $this->setRequestHeader($headerName, $headerValue);
+        $this->restApiBrowser->setRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -100,7 +74,7 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iAddHeaderEqualTo($headerName, $headerValue)
     {
-        $this->addRequestHeader($headerName, $headerValue);
+        $this->restApiBrowser->addRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -110,9 +84,8 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function iSetBasicAuthenticationWithAnd($username, $password)
     {
-        $this->removeRequestHeader('Authorization');
         $authorization = base64_encode($username . ':' . $password);
-        $this->addRequestHeader('Authorization', 'Basic ' . $authorization);
+        $this->restApiBrowser->setRequestHeader('Authorization', 'Basic ' . $authorization);
     }
 
     /**
@@ -120,8 +93,8 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function printResponse()
     {
-        $request = $this->request;
-        $response = $this->response;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
 
         echo sprintf(
             "%s %s => %d:\n%s\n",
@@ -135,100 +108,16 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     /**
      * @return array|\Guzzle\Http\Message\RequestInterface
      */
-    public function getRequest()
+    private function getRequest()
     {
-        return $this->request;
+        return $this->restApiBrowser->getRequest();
     }
 
     /**
      * @return array|\Guzzle\Http\Message\Response
      */
-    public function getResponse()
+    private function getResponse()
     {
-        return $this->response;
-    }
-
-    /**
-     * @return array
-     * @deprecated BC Alias, prefer using getRequestHeaders()
-     */
-    public function getHeaders()
-    {
-        return $this->getRequestHeaders();
-    }
-
-    /**
-     * @return array
-     */
-    public function getRequestHeaders()
-    {
-        return $this->requestHeaders;
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    protected function addRequestHeader($name, $value)
-    {
-        if (isset($this->requestHeaders[$name])) {
-            if (!is_array($this->requestHeaders[$name])) {
-                $this->requestHeaders[$name] = array($this->requestHeaders[$name]);
-            }
-            $this->requestHeaders[$name][] = $value;
-        } else {
-            $this->requestHeaders[$name] = $value;
-        }
-    }
-
-    /**
-     * @param string $headerName
-     */
-    protected function removeRequestHeader($headerName)
-    {
-        if (array_key_exists($headerName, $this->requestHeaders)) {
-            unset($this->requestHeaders[$headerName]);
-        }
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    protected function setRequestHeader($name, $value)
-    {
-        $this->removeRequestHeader($name);
-        $this->addRequestHeader($name, $value);
-    }
-
-    /**
-     * @param string $method
-     * @param string $url
-     * @param PyStringNode $body
-     */
-    private function sendRequest($method, $url, $body = null)
-    {
-        $this->createRequest($method, $url, $body);
-
-        try {
-            $this->response = $this->httpClient->send($this->request);
-        } catch (BadResponseException $e) {
-            $this->response = $e->getResponse();
-
-            if (null === $this->response) {
-                throw $e;
-            }
-        }
-
-        if (null !== $this->jsonStorage && $this->enableJsonInspection) {
-            $this->jsonStorage->writeRawContent($this->response->getBody(true));
-        }
-    }
-
-    private function createRequest($method, $url, $body = null)
-    {
-        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body);
-        // Reset headers used for the HTTP request
-        $this->requestHeaders = array();
+        return $this->restApiBrowser->getResponse();
     }
 }

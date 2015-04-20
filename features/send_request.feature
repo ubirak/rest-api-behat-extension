@@ -38,4 +38,3 @@ Feature: Test send API request
         Then the response status code should be 200
         And the JSON node "headers.header" should have 1 element
         And the JSON node "headers.header[0]" should be equal to "value2"
-

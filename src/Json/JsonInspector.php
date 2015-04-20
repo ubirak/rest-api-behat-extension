@@ -1,40 +1,45 @@
 <?php
 
-namespace Rezzza\JsonApiBehatExtension\Json;
+namespace Rezzza\RestApiBehatExtension\Json;
 
 use JsonSchema\Validator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class JsonInspector
 {
-    private $evaluationMode;
+    private $jsonParser;
 
-    private $propertyAccessor;
+    private $jsonStorage;
 
-    public function __construct($evaluationMode)
+    public function __construct(JsonStorage $jsonStorage, JsonParser $jsonParser)
     {
-        $this->evaluationMode = $evaluationMode;
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->enableExceptionOnInvalidIndex()
-            ->getPropertyAccessor()
-        ;
+        $this->jsonParser = $jsonParser;
+        $this->jsonStorage = $jsonStorage;
     }
 
-    public function evaluate(Json $json, $expression)
+    public function readJsonNodeValue($jsonNodeExpression)
     {
-        if ($this->evaluationMode === 'javascript') {
-            $expression = str_replace('->', '.', $expression);
-        }
-
-        try {
-            return $json->read($expression, $this->propertyAccessor);
-        } catch (\Exception $e) {
-            throw new \Exception(sprintf('Failed to evaluate expression "%s"', $expression, 0, $e));
-        }
+        return $this->jsonParser->evaluate(
+            $this->readJson(),
+            $jsonNodeExpression
+        );
     }
 
-    public function validate(Json $json, JsonSchema $schema)
+    public function validateJson(JsonSchema $jsonSchema)
     {
-        return $schema->validate($json, new Validator);
+        $this->jsonParser->validate(
+            $this->readJson(),
+            $jsonSchema
+        );
+    }
+
+    public function readJson()
+    {
+        return $this->jsonStorage->readJson();
+    }
+
+    public function writeJson($jsonContent)
+    {
+        $this->jsonStorage->writeRawContent($jsonContent);
     }
 }
