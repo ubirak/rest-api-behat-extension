@@ -51,10 +51,11 @@ class RestApiBrowser
      * @param string $method
      * @param string $url
      * @param PyStringNode $body
+     * @param array $options
      */
-    public function sendRequest($method, $url, $body = null)
+    public function sendRequest($method, $url, $body = null, array $options = array())
     {
-        $this->createRequest($method, $url, $body);
+        $this->createRequest($method, $url, $body, $options);
 
         try {
             $this->response = $this->httpClient->send($this->request);
@@ -97,9 +98,9 @@ class RestApiBrowser
         $this->addRequestHeader($name, $value);
     }
 
-    private function createRequest($method, $url, $body = null)
+    private function createRequest($method, $url, $body = null, array $options = array())
     {
-        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body);
+        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body, $options);
         // Reset headers used for the HTTP request
         $this->requestHeaders = array();
     }
