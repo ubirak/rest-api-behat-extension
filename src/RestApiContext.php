@@ -225,10 +225,28 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         }
     }
 
-    private function createRequest($method, $url, $body = null)
+    /**
+     * @param string                $method
+     * @param string                $uri    With or without host
+     * @param string|resource|array $body
+     */
+    private function createRequest($method, $uri, $body = null)
     {
-        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body);
+        if (!$this->hasHost($uri)) {
+            $uri = rtrim($this->httpClient->getBaseUrl(), '/') . '/' . ltrim($uri, '/');
+        }
+        $this->request = $this->httpClient->createRequest($method, $uri, $this->requestHeaders, $body);
         // Reset headers used for the HTTP request
         $this->requestHeaders = array();
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return bool
+     */
+    private function hasHost($uri)
+    {
+        return strpos($uri, '://') !== false;
     }
 }

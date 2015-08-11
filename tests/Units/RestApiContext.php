@@ -19,7 +19,7 @@ class RestApiContext extends atoum
     {
         $this
             ->given(
-                $httpClient = $this->mockHttpClient(200)
+                $httpClient = $this->mockHttpClient('http://verylastroom.com', 200)
             )
             ->and($sut = new SUT($httpClient, null, false))
         ;
@@ -52,7 +52,7 @@ class RestApiContext extends atoum
     {
         $this
             ->given(
-                $httpClient = $this->mockHttpClient(200)
+                $httpClient = $this->mockHttpClient('http://verylastroom.com', 200)
             )
             ->and($sut = new SUT($httpClient, null, false))
         ;
@@ -79,12 +79,13 @@ class RestApiContext extends atoum
 
     /**
      * @dataProvider requestDataProvider
+     * @param string $url
      * @param array $requestHeaders
      */
-    public function test_get_request(array $requestHeaders)
+    public function test_get_request($url, array $requestHeaders)
     {
         // Given
-        $mockHttpClient = $this->mockHttpClient(200, array());
+        $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', 200, array());
 
         $restApiContext = new SUT($mockHttpClient, null, false);
         foreach ($requestHeaders as $requestHeaderKey => $requestHeaderValue) {
@@ -92,7 +93,7 @@ class RestApiContext extends atoum
         }
 
         // When
-        $restApiContext->iSendARequest('GET', 'http://verylastroom.com/');
+        $restApiContext->iSendARequest('GET', $url);
 
         // Then
         $request = $restApiContext->getRequest();
@@ -105,14 +106,70 @@ class RestApiContext extends atoum
     {
         return array(
             array(
+                'url' => 'http://verylastroom.com/',
                 'requestHeaders' => array(
                     array("name" => "value")
                 )
             ),
             array(
+                'url' => 'http://verylastroom.com/',
                 'requestHeaders' => array(
                     array("name1" => "value1"), array("name2" => "value2")
                 )
+            ),
+            array(
+                'url' => '/?test=a:2', // Without host with weird query string
+                'requestHeaders' => array(
+                    array("name1" => "value1"), array("name2" => "value2")
+                )
+            )
+        );
+    }
+
+    /**
+     * @dataProvider urlWithSlashesProvider
+     * @param string $baseUrl
+     * @param string $stepUrl
+     * @param string $expectedUrl
+     */
+    public function test_create_request_with_slashes_to_clean($baseUrl, $stepUrl, $expectedUrl)
+    {
+        // Given
+        $mockHttpClient = $this->mockHttpClient($baseUrl, 200, array());
+
+        $restApiContext = new SUT($mockHttpClient, null, false);
+
+        // When
+        $restApiContext->iSendARequest('GET', $stepUrl);
+
+        // Then
+        $request = $restApiContext->getRequest();
+
+        $this->string($request->getUrl())->isEqualTo($expectedUrl);
+    }
+
+    public function urlWithSlashesProvider()
+    {
+        return array(
+            array( // Trim right + left
+                'baseUrl' => 'http://verylastroom.com/',
+                'stepUrl' => '/contact/',
+                'expectedUrl' => 'http://verylastroom.com/contact/'
+            ),
+            array( // Trim left
+                'baseUrl' => 'http://verylastroom.com',
+                'stepUrl' => '/contact/',
+                'expectedUrl' => 'http://verylastroom.com/contact/'
+            ),
+            array( // Trim right
+                'baseUrl' => 'http://verylastroom.com/',
+                'stepUrl' => 'contact/',
+                'expectedUrl' => 'http://verylastroom.com/contact/'
+            ),
+            array( // Add missing slash
+                'baseUrl' => 'http://verylastroom.com',
+                'stepUrl' => 'contact/',
+                'expectedUrl' => 'http://verylastroom.com/contact/'
             )
         );
     }
@@ -125,7 +182,7 @@ class RestApiContext extends atoum
     public function test_get_response($statusCode, array $responseHeaders)
     {
         // Given
-        $mockHttpClient = $this->mockHttpClient($statusCode, $responseHeaders);
+        $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', $statusCode, $responseHeaders);
 
         $restApiContext = new SUT($mockHttpClient, null, false);
 
@@ -158,18 +215,20 @@ class RestApiContext extends atoum
     }
 
     /**
-     * @param int   $responseStatusCode
-     * @param array $headers
+     * @param string $baseUrl
+     * @param int    $responseStatusCode
+     * @param array  $headers
      *
      * @return \Guzzle\Http\Client
      */
-    private function mockHttpClient($responseStatusCode, array $headers = array())
+    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = array())
     {
         $mockHttpClient = new \mock\Guzzle\Http\Client();
         $mockHttpClient->getMockController()->send = new \Guzzle\Http\Message\Response(
             $responseStatusCode,
             $headers
         );
+        $mockHttpClient->getMockController()->getBaseUrl = $baseUrl;
 
         return $mockHttpClient;
     }
