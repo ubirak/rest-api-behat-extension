@@ -98,9 +98,19 @@ class RestApiBrowser
         $this->addRequestHeader($name, $value);
     }
 
-    private function createRequest($method, $url, $body = null, array $options = array())
+    /**
+     * @param string                $method
+     * @param string                $uri With or without host
+     * @param string|resource|array $body
+     * @param array                 $options
+     */
+    private function createRequest($method, $uri, $body = null, array $options = array())
     {
-        $this->request = $this->httpClient->createRequest($method, $url, $this->requestHeaders, $body, $options);
+        if (!$this->hasHost($uri)) {
+            $uri = rtrim($this->httpClient->getBaseUrl(), '/') . '/' . ltrim($uri, '/');
+        }
+
+        $this->request = $this->httpClient->createRequest($method, $uri, $this->requestHeaders, $body, $options);
         // Reset headers used for the HTTP request
         $this->requestHeaders = array();
     }
@@ -110,5 +120,15 @@ class RestApiBrowser
         if (array_key_exists($headerName, $this->requestHeaders)) {
             unset($this->requestHeaders[$headerName]);
         }
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return bool
+     */
+    private function hasHost($uri)
+    {
+        return strpos($uri, '://') !== false;
     }
 }
