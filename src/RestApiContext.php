@@ -12,6 +12,7 @@ use Rezzza\RestApiBehatExtension\Json\JsonStorageAware;
 
 class RestApiContext extends BehatContext implements JsonStorageAware
 {
+    /** @var \mageekguy\atoum */
     private $asserter;
 
     /** @var HttpClient */
@@ -32,6 +33,9 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     /** @var JsonStorage */
     private $jsonStorage;
 
+    /** @var bool */
+    private $enableFollowRedirects = true;
+
     public function __construct(HttpClient $httpClient, $asserter, $enableJsonInspection)
     {
         $this->requestHeaders = array();
@@ -46,6 +50,14 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     public function setJsonStorage(JsonStorage $jsonStorage)
     {
         $this->jsonStorage = $jsonStorage;
+    }
+
+    /**
+     * @Given /^(?:I )?won't follow next redirect$/
+     */
+    public function iWontFollowNextRedirect()
+    {
+        $this->enableFollowRedirects = false;
     }
 
     /**
@@ -85,6 +97,19 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
         $this->asserter->variable($actual)->isEqualTo($expected);
+    }
+
+    /**
+     * @param string $headerKey
+     * @param string $expectedValue
+     *
+     * @Then /^(?:the )?response header "(?P<headerKey>[^"]*)" should have value "(?P<expectedValue>[^"]*)"$/
+     */
+    public function theResponseHeaderShouldHave($headerKey, $expectedValue)
+    {
+        if (! $this->response->getHeader($headerKey)->hasValue($expectedValue)) {
+            throw new \mageekguy\atoum\asserter\exception($this->asserter, sprintf('Header "%s" is not containing "%s" in last response.', $headerKey, $expectedValue));
+        }
     }
 
     /**
@@ -235,7 +260,14 @@ class RestApiContext extends BehatContext implements JsonStorageAware
         if (!$this->hasHost($uri)) {
             $uri = rtrim($this->httpClient->getBaseUrl(), '/') . '/' . ltrim($uri, '/');
         }
-        $this->request = $this->httpClient->createRequest($method, $uri, $this->requestHeaders, $body);
+
+        $options = [];
+        if (false === $this->enableFollowRedirects) {
+            $options['allow_redirects'] = false;
+            $this->enableFollowRedirects = true;
+        }
+
+        $this->request = $this->httpClient->createRequest($method, $uri, $this->requestHeaders, $body, $options);
         // Reset headers used for the HTTP request
         $this->requestHeaders = array();
     }
