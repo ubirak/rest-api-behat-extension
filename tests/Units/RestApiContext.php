@@ -3,6 +3,8 @@
 namespace Rezzza\RestApiBehatExtension\Tests\Units;
 
 use atoum;
+use Behat\Gherkin\Node\PyStringNode;
+use mageekguy\atoum\asserters\variable;
 use Rezzza\RestApiBehatExtension\RestApiContext as SUT;
 
 /**
@@ -75,6 +77,63 @@ class RestApiContext extends atoum
             array(array(array("name" => "value")), array("name" => "value")),
             array(array(array("name" => "value"), array("name" => "value2")), array("name" => "value2")),
         );
+    }
+
+    public function test_response_header_value_should_be_asserted()
+    {
+        // Given
+        $httpClient = $this->mockHttpClient('http://verylastroom.com', 200, ['foo' => ['bar', 'azerty']]);
+        $sut = new SUT($httpClient, $this->createAsserter(), false);
+
+        // When
+        $sut->iSendARequestWithBody('GET', 'http://www.google.com', new PyStringNode());
+
+        // Then
+        $sut->theResponseHeaderShouldHave('foo', 'bar');
+        $sut->theResponseHeaderShouldHave('foo', 'azerty');
+
+        $this->exception(
+            function() use($sut) {
+                $sut->theResponseHeaderShouldHave('foo', 'chuck');
+            }
+        )->isInstanceOf('\mageekguy\atoum\asserter\exception')
+        ;
+    }
+
+    public function test_next_send_shall_not_follow_redirect()
+    {
+        // Given
+        $httpClient = $this->mockHttpClient('http://verylastroom.com', 200, ['foo' => ['bar', 'azerty']]);
+        $sut = new SUT($httpClient, $this->createAsserter(), false);
+        $expectedOptions = ['allow_redirects' => false];
+
+        $sut->iWontFollowNextRedirect();
+
+        // When
+        $sut->iSendARequestWithBody('GET', 'http://www.google.com', new PyStringNode());
+
+        // Then
+        $this->mock($httpClient)
+            ->call('createRequest')
+                ->withArguments('GET', 'http://www.google.com', [], '', $expectedOptions)->once()
+            ;
+    }
+
+    public function test_default_send_shall_follow_redirect()
+    {
+        // Given
+        $httpClient = $this->mockHttpClient('http://verylastroom.com', 200, ['foo' => ['bar', 'azerty']]);
+        $sut = new SUT($httpClient, $this->createAsserter(), false);
+        $expectedOptions = [];
+
+        // When
+        $sut->iSendARequestWithBody('GET', 'http://www.google.com', new PyStringNode());
+
+        // Then
+        $this->mock($httpClient)
+            ->call('createRequest')
+                ->withArguments('GET', 'http://www.google.com', [], '', $expectedOptions)->once()
+            ;
     }
 
     /**
@@ -231,5 +290,13 @@ class RestApiContext extends atoum
         $mockHttpClient->getMockController()->getBaseUrl = $baseUrl;
 
         return $mockHttpClient;
+    }
+
+    /**
+     * @return variable
+     */
+    private function createAsserter()
+    {
+        return new variable();
     }
 }
