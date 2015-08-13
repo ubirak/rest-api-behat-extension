@@ -6,7 +6,9 @@
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -52,6 +54,14 @@ $app->match(
         $response = new JsonResponse($ret);
 
         return $response;
+    }
+);
+
+$app->match(
+    'redirect',
+    function (Request $req) {
+
+        return new RedirectResponse('do-not-expose-this-service-in-production.it/is-intrinsically-unsafe', Response::HTTP_MOVED_PERMANENTLY);
     }
 );
 
