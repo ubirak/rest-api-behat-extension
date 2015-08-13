@@ -39,3 +39,8 @@ Feature: Test send API request
         And the JSON node "headers.header" should have 1 element
         And the JSON node "headers.header[0]" should be equal to "value2"
 
+    Scenario: Not following redirect
+        Given I won't follow next redirect
+        When I send a GET request to "redirect"
+        Then the response status code should be 301
+        And response header "Location" should have value "do-not-expose-this-service-in-production.it/is-intrinsically-unsafe"
