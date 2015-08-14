@@ -107,9 +107,19 @@ class RestApiContext extends BehatContext implements JsonStorageAware
      */
     public function theResponseHeaderShouldHave($headerKey, $expectedValue)
     {
-        if (! $this->response->getHeader($headerKey)->hasValue($expectedValue)) {
-            throw new \mageekguy\atoum\asserter\exception($this->asserter, sprintf('Header "%s" is not containing "%s" in last response.', $headerKey, $expectedValue));
-        }
+        $hasValue = $this->response->getHeader($headerKey)->hasValue($expectedValue);
+        $this->asserter->boolean($hasValue)
+            ->isTrue(
+                sprintf(
+                    'Header "%s" is not containing in last response:
+"%s"
+Received:
+"%s"',
+                    $headerKey,
+                    $expectedValue,
+                    implode(', ', $this->response->getHeader($headerKey)->toArray())
+                )
+            );
     }
 
     /**

@@ -97,6 +97,15 @@ class RestApiContext extends atoum
                 $sut->theResponseHeaderShouldHave('foo', 'chuck');
             }
         )->isInstanceOf('\mageekguy\atoum\asserter\exception')
+            ->hasMessage('Header "foo" is not containing in last response:
+"chuck"
+Received:
+"bar, azerty"
+-Expected
++Actual
+@@ -1 +1 @@
+-bool(true)
++bool(false)')
         ;
     }
 
