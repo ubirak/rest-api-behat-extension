@@ -5,8 +5,9 @@ namespace Rezzza\RestApiBehatExtension\Json;
 use mageekguy\atoum\asserter\generator as asserter;
 use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Rezzza\RestApiBehatExtension\Response\ResponseStorageAware;
 
-class JsonContext extends BehatContext implements JsonStorageAware
+class JsonContext extends BehatContext implements ResponseStorageAware
 {
     private $jsonInspector;
 
@@ -23,9 +24,9 @@ class JsonContext extends BehatContext implements JsonStorageAware
         $this->jsonSchemaBaseUrl = rtrim($jsonSchemaBaseUrl, '/');
     }
 
-    public function setJsonStorage(JsonStorage $jsonStorage)
+    public function setResponseStorage(ResponseStorage $responseStorage)
     {
-        $this->jsonStorage = $jsonStorage;
+        $this->jsonStorage = new JsonStorage($responseStorage);
     }
 
     /**

@@ -2,15 +2,15 @@
 
 namespace Rezzza\RestApiBehatExtension;
 
-use mageekguy\atoum\asserter;
 use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
-use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Client as HttpClient;
-use Rezzza\RestApiBehatExtension\Json\JsonStorage;
-use Rezzza\RestApiBehatExtension\Json\JsonStorageAware;
+use Guzzle\Http\Exception\BadResponseException;
+use Rezzza\RestApiBehatExtension\Response\ResponseStorage;
+use Rezzza\RestApiBehatExtension\Response\ResponseStorageAware;
+use mageekguy\atoum\asserter;
 
-class RestApiContext extends BehatContext implements JsonStorageAware
+class RestApiContext extends BehatContext implements ResponseStorageAware
 {
     /** @var \mageekguy\atoum */
     private $asserter;
@@ -28,28 +28,28 @@ class RestApiContext extends BehatContext implements JsonStorageAware
     private $requestHeaders = array();
 
     /** @var bool */
-    private $enableJsonInspection = true;
+    private $enableResponseInspection = true;
 
-    /** @var JsonStorage */
-    private $jsonStorage;
+    /** @var ResponseStorage */
+    private $responseStorage;
 
     /** @var bool */
     private $enableFollowRedirects = true;
 
-    public function __construct(HttpClient $httpClient, $asserter, $enableJsonInspection)
+    public function __construct(HttpClient $httpClient, $asserter, $enableResponseInspection)
     {
         $this->requestHeaders = array();
         $this->httpClient = $httpClient;
         $this->asserter = $asserter;
-        $this->enableJsonInspection = (bool) $enableJsonInspection;
+        $this->enableResponseInspection = (bool) $enableResponseInspection;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setJsonStorage(JsonStorage $jsonStorage)
+    public function setResponseStorage(ResponseStorage $responseStorage)
     {
-        $this->jsonStorage = $jsonStorage;
+        $this->responseStorage = $responseStorage;
     }
 
     /**
@@ -255,8 +255,8 @@ Received:
             }
         }
 
-        if (null !== $this->jsonStorage && $this->enableJsonInspection) {
-            $this->jsonStorage->writeRawContent($this->response->getBody(true));
+        if (null !== $this->responseStorage && $this->enableResponseInspection) {
+            $this->responseStorage->writeRawContent($this->response->getBody(true));
         }
     }
 

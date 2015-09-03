@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="rezzza.json_api.json_storage" class="Rezzza\RestApiBehatExtension\Json\JsonStorage" />
+        <service id="rezzza.api.response_storage" class="Rezzza\RestApiBehatExtension\Response\ResponseStorage" />
 
-        <service id="rezzza.json_api.json_storage.initializer" class="Rezzza\RestApiBehatExtension\Json\JsonStorageInitializer">
-            <argument type="service" id="rezzza.json_api.json_storage" />
+        <service id="rezzza.api.response_storage.initializer" class="Rezzza\RestApiBehatExtension\Response\ResponseStorageInitializer">
+            <argument type="service" id="rezzza.api.response_storage" />
             <tag name="behat.context.initializer" />
         </service>
     </services>

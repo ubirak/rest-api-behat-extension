@@ -17,4 +17,5 @@ default:
 Have a look to the [FeatureContext::__construct](https://github.com/rezzza/rest-api-behat-extension/blob/behat-2.x/features/bootstrap/FeatureContext.php#L28)
 
 * `JsonContext` can be used alone without HTTP calls with the step `I load JSON:`
+* `XmlContext` can be used alone without HTTP calls with the step `I load XML:`
 * `RestApiContext` can be used alone if you pass `false` as third argument.
