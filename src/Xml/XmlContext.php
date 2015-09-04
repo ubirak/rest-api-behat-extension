@@ -92,7 +92,7 @@ class XmlContext extends BehatContext implements ResponseStorageAware
 
 
     /**
-     * @Then /^the xml response should be equal to:$/
+     * @Then /^the XML response should be equal to:$/
      */
     public function theResponseXmlShouldBeEqualTo(PyStringNode $expected)
     {
@@ -216,7 +216,10 @@ class XmlContext extends BehatContext implements ResponseStorageAware
                 ++$length;
             }
         }
-        $this->assertEquals((integer) $nth, $length);
+
+        $this->asserter
+            ->integer((int) $nth)
+            ->isEqualTo($length);
     }
 
     /**
@@ -227,7 +230,10 @@ class XmlContext extends BehatContext implements ResponseStorageAware
     public function theXmlElementShouldContain($element, $text)
     {
         $elements = $this->theXmlElementShouldExist($element);
-        $this->assertContains($text, $elements->item(0)->nodeValue);
+
+        $this->asserter
+            ->string($elements->item(0)->nodeValue)
+            ->contains($text);
     }
 
     /**
@@ -238,7 +244,10 @@ class XmlContext extends BehatContext implements ResponseStorageAware
     public function theXmlElementShouldNotContain($element, $text)
     {
         $elements = $this->theXmlElementShouldExist($element);
-        $this->assertNotContains($text, $elements->item(0)->nodeValue);
+
+        $this->asserter
+            ->string($elements->item(0)->nodeValue)
+            ->notContains($text);
     }
 
     /**
@@ -308,22 +317,20 @@ class XmlContext extends BehatContext implements ResponseStorageAware
         return ($elements === false) ? new \DOMNodeList() : $elements;
     }
     /**
-     * @param \DomDocument $dom
      * @return \SimpleXMLElement
      */
-    private function getSimpleXml(\DOMDocument $dom = null)
+    private function getSimpleXml()
     {
-        return simplexml_import_dom($dom ? $dom : $this->xmlStorage->readXml(false));
+        return simplexml_import_dom($this->xmlStorage->readXml(false));
     }
     /**
-     * @param \DOMDocument $dom
      * @return array
      */
-    private function getNamespaces(\DOMDocument $dom = null)
+    private function getNamespaces()
     {
-        $xml = $this->getSimpleXml($dom);
-        $namespaces = $xml->getNamespaces(true);
-        return $namespaces;
+        return $this->getSimpleXml()
+            ->getNamespaces(true)
+            ;
     }
     /**
      * @BeforeScenario

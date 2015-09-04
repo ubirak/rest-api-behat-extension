@@ -23,6 +23,10 @@ class JsonStorage
 
     public function readJson()
     {
-        return new Json($this->responseStorage->read());
+        try {
+            return new Json($this->responseStorage->read());
+        } catch (\LogicException $e) {
+            throw new \LogicException('No content defined. You should use JsonContainer::setRawContent method to inject content you want to analyze');
+        }
     }
 }

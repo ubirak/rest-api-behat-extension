@@ -2,10 +2,11 @@
 
 namespace Rezzza\RestApiBehatExtension\Json;
 
-use mageekguy\atoum\asserter\generator as asserter;
 use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Rezzza\RestApiBehatExtension\Response\ResponseStorage;
 use Rezzza\RestApiBehatExtension\Response\ResponseStorageAware;
+use mageekguy\atoum\asserter\generator as asserter;
 
 class JsonContext extends BehatContext implements ResponseStorageAware
 {
