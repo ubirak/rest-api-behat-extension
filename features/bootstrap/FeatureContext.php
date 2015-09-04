@@ -11,6 +11,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Rezzza\RestApiBehatExtension\RestApiContext;
 use Rezzza\RestApiBehatExtension\Json\JsonContext;
 use Rezzza\RestApiBehatExtension\Json\JsonInspector;
+use Rezzza\RestApiBehatExtension\Xml\XmlContext;
 
 /**
  * Test workflow totally copied from https://github.com/Behat/WebApiExtension/blob/master/features/bootstrap/FeatureContext.php
@@ -39,6 +40,11 @@ class FeatureContext extends BehatContext
             'json',
             new JsonContext($jsonInspector, $this->asserter, __DIR__)
         );
+        $this->useContext(
+            'xml',
+            new XmlContext($this->asserter)
+        );
+
     }
 
     /**
