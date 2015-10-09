@@ -4,7 +4,7 @@ namespace Rezzza\RestApiBehatExtension\Rest;
 
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\ClientInterface as HttpClient;
-use Guzzle\Http\Message\Request;
+use Guzzle\Http\Message\Response;
 
 class RestApiBrowser
 {
