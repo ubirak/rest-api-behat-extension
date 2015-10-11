@@ -18,8 +18,8 @@
             <tag name="context.argument_resolver" />
         </service>
 
-        <service id="rezzza.json_api.rest.http_client" class="Guzzle\Http\Client" public="false">
-            <argument>%rezzza.json_api.rest.base_url%</argument>
+        <service id="rezzza.json_api.rest.http_client" class="GuzzleHttp\Client" public="false">
+            <argument>%rezzza.json_api.rest.client.config%</argument>
         </service>
 
         <service id="rezzza.json_api.rest.rest_api_browser" class="Rezzza\RestApiBehatExtension\Rest\RestApiBrowser" public="false">
