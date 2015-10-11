@@ -14,7 +14,7 @@ class Extension implements ExtensionInterface
 {
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->setParameter('rezzza.json_api.rest.base_url', $config['rest']['base_url']);
+        $container->setParameter('rezzza.json_api.rest.client.config', $config['rest']['client']["config"]);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/Resources'));
         $loader->load('services.xml');
 
@@ -32,9 +32,16 @@ class Extension implements ExtensionInterface
                 ->arrayNode('rest')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('base_url')->end()
                         ->booleanNode('store_response')
                             ->defaultTrue()->end()
+                        ->arrayNode('client')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+
+                            ->arrayNode('config')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('base_uri')->end()
                         ->end()
                     ->end()
                 ->end()

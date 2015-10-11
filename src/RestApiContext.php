@@ -6,8 +6,7 @@ use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\ClientInterface as HttpClient;
+use GuzzleHttp\Exception\BadResponseException;
 use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
 
 class RestApiContext implements Context, SnippetAcceptingContext
@@ -99,14 +98,14 @@ class RestApiContext implements Context, SnippetAcceptingContext
         echo sprintf(
             "%s %s :\n%s%s\n",
             $request->getMethod(),
-            $request->getUrl(),
-            $response->getRawHeaders(),
+            $request->getUri(),
+            implode("\n",$response->getHeaders()),
             $response->getBody()
         );
     }
 
     /**
-     * @return array|\Guzzle\Http\Message\RequestInterface
+     * @return array|\Psr\Http\Message\RequestInterface
      */
     private function getRequest()
     {
@@ -114,7 +113,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @return array|\Guzzle\Http\Message\Response
+     * @return array|\GuzzleHttp\Psr7\Response
      */
     private function getResponse()
     {

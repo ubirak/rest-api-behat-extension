@@ -17,7 +17,9 @@ Feature: Test json inspection edge cases
             extensions:
                 Rezzza\RestApiBehatExtension\Extension:
                     rest:
-                        base_url: http://localhost:8888
+                        client:
+                            config:
+                                base_uri : http://localhost:8888
                         store_response: true
         """
 
