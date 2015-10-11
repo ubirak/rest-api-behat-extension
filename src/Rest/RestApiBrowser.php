@@ -5,6 +5,7 @@ namespace Rezzza\RestApiBehatExtension\Rest;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\ClientInterface as HttpClient;
 use Guzzle\Http\Message\Response;
+use Behat\Gherkin\Node\PyStringNode;
 
 class RestApiBrowser
 {
@@ -110,6 +111,12 @@ class RestApiBrowser
         }
     }
 
+    /**
+     * @return HttpClient
+     */
+    public function getHttpClient(){
+        return $this->httpClient;
+    }
     /**
      * @param string                $method
      * @param string                $uri With or without host
