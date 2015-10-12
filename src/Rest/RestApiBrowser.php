@@ -112,12 +112,6 @@ class RestApiBrowser
     }
 
     /**
-     * @return HttpClient
-     */
-    public function getHttpClient(){
-        return $this->httpClient;
-    }
-    /**
      * @param string                $method
      * @param string                $uri With or without host
      * @param string|resource|array $body
