@@ -6,8 +6,8 @@ use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\ClientInterface as HttpClient;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
 
 class RestApiContext implements Context, SnippetAcceptingContext
@@ -41,8 +41,6 @@ class RestApiContext implements Context, SnippetAcceptingContext
      * @param PyStringNode $body
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
-     * @throws BadResponseException
-     * @throws \Exception
      */
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
@@ -59,6 +57,14 @@ class RestApiContext implements Context, SnippetAcceptingContext
         $expected = intval($code);
         $actual = intval($this->getResponse()->getStatusCode());
         $this->asserter->variable($actual)->isEqualTo($expected);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function getResponse()
+    {
+        return $this->restApiBrowser->getResponse();
     }
 
     /**
@@ -89,6 +95,55 @@ class RestApiContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then print request and response
+     */
+    public function printRequestAndResponse()
+    {
+        echo "REQUEST:\n";
+        $this->printRequest();
+        echo "\nRESPONSE:\n";
+        $this->printResponse();
+    }
+
+    /**
+     * @Then print request
+     */
+    public function printRequest()
+    {
+        $request = $this->getRequest();
+        echo sprintf(
+            "%s %s :\n%s%s\n",
+            $request->getMethod(),
+            $request->getUri(),
+            $this->getRawHeaders($request->getHeaders()),
+            $request->getBody()
+        );
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    private function getRequest()
+    {
+        return $this->restApiBrowser->getRequest();
+    }
+
+    /**
+     * @param array $headers
+     * @return string
+     */
+    private function getRawHeaders(array $headers)
+    {
+        $rawHeaders = '';
+        foreach ($headers as $key => $value) {
+            $rawHeaders .= sprintf("%s: %s\n", $key, is_array($value) ? implode(", ", $value) : $value);
+
+        }
+        $rawHeaders .= "\n";
+        return $rawHeaders;
+    }
+
+    /**
      * @Then print response
      */
     public function printResponse()
@@ -99,25 +154,9 @@ class RestApiContext implements Context, SnippetAcceptingContext
         echo sprintf(
             "%s %s :\n%s%s\n",
             $request->getMethod(),
-            $request->getUrl(),
-            $response->getRawHeaders(),
+            $request->getUri()->__toString(),
+            $this->getRawHeaders($response->getHeaders()),
             $response->getBody()
         );
-    }
-
-    /**
-     * @return array|\Guzzle\Http\Message\RequestInterface
-     */
-    private function getRequest()
-    {
-        return $this->restApiBrowser->getRequest();
-    }
-
-    /**
-     * @return array|\Guzzle\Http\Message\Response
-     */
-    private function getResponse()
-    {
-        return $this->restApiBrowser->getResponse();
     }
 }
