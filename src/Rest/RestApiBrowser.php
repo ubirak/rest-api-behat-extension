@@ -2,18 +2,24 @@
 
 namespace Rezzza\RestApiBehatExtension\Rest;
 
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\ClientInterface as HttpClient;
+use Ivory\HttpAdapter\HttpAdapterFactory;
+use Ivory\HttpAdapter\HttpAdapterInterface as HttpClient;
+use Ivory\HttpAdapter\HttpAdapterException;
+use Ivory\HttpAdapter\Message\Request;
+use Zend\Diactoros\Stream;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Behat\Gherkin\Node\PyStringNode;
 
 class RestApiBrowser
 {
     /** @var HttpClient */
     private $httpClient;
 
-    /** @var array|\Guzzle\Http\Message\RequestInterface */
+    /** @var RequestInterface */
     private $request;
 
-    /** @var \Guzzle\Http\Message\Response|array */
+    /** @var ResponseInterface */
     private $response;
 
     /** @var array */
@@ -22,19 +28,48 @@ class RestApiBrowser
     /** @var ResponseStorage */
     private $responseStorage;
 
-    public function __construct(HttpClient $httpClient)
+    /**
+     * @param string $base_url
+     * @param string|null $adaptor_name
+     * @throws HttpAdapterException
+     */
+    public function __construct($base_url, $adaptor_name, HttpClient $httpClient = null)
     {
-        $this->httpClient = $httpClient;
+        if (!is_null($httpClient) && $httpClient instanceof HttpClient) {
+            $this->httpClient = $httpClient;
+        } else {
+            if (is_string($adaptor_name) && HttpAdapterFactory::capable($adaptor_name)) {
+                $this->httpClient = HttpAdapterFactory::create($adaptor_name);
+            } else {
+                $this->httpClient = HttpAdapterFactory::guess();
+            }
+            $this->httpClient->getConfiguration()->setBaseUri($base_url);
+        }
     }
 
+    /**
+     * @param ResponseStorage $responseStorage
+     */
     public function enableResponseStorage(ResponseStorage $responseStorage)
     {
         $this->responseStorage = $responseStorage;
     }
 
+
+    /**
+     * @return ResponseInterface
+     */
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     */
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
     }
 
     public function getRequest()
@@ -48,19 +83,26 @@ class RestApiBrowser
     }
 
     /**
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
      * @param string $method
      * @param string $url
-     * @param PyStringNode $body
-     * @param array $options
+     * @param string $body
      */
-    public function sendRequest($method, $url, $body = null, array $options = array())
+    public function sendRequest($method, $url, $body = null)
     {
-        $this->createRequest($method, $url, $body, $options);
-
         try {
-            $this->response = $this->httpClient->send($this->request);
-        } catch (BadResponseException $e) {
-            $this->response = $e->getResponse();
+            $this->send($method, $url, $body);
+        } catch (HttpAdapterException $e) {
+            if ($e->hasResponse()) {
+                $this->response = $e->getResponse();
+            }
 
             if (null === $this->response) {
                 throw $e;
@@ -68,7 +110,54 @@ class RestApiBrowser
         }
 
         if (null !== $this->responseStorage) {
-            $this->responseStorage->writeRawContent($this->response->getBody(true));
+            $this->responseStorage->writeRawContent($this->response->getBody()->getContents());
+        }
+    }
+
+    /**
+     * @param string $method
+     * @param string $uri With or without host
+     * @param string|resource|array $body
+     */
+    private function send($method, $uri, $body = null)
+    {
+        if (!$this->hasHost($uri)) {
+            $uri = rtrim($this->httpClient->getConfiguration()->getBaseUri(), '/') . '/' . ltrim($uri, '/');
+        }
+        $stream = new Stream('php://memory', 'rw');
+        if ($body) {
+            $stream->write($body);
+        }
+        $this->request = new Request($uri, $method, $stream, $this->requestHeaders);
+        $this->response = $this->httpClient->send($uri, $method, $this->requestHeaders, $body);
+        // Reset headers used for the HTTP request
+        $this->requestHeaders = array();
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return bool
+     */
+    private function hasHost($uri)
+    {
+        return strpos($uri, '://') !== false;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    public function setRequestHeader($name, $value)
+    {
+        $this->removeRequestHeader($name);
+        $this->addRequestHeader($name, $value);
+    }
+
+    private function removeRequestHeader($headerName)
+    {
+        if (array_key_exists($headerName, $this->requestHeaders)) {
+            unset($this->requestHeaders[$headerName]);
         }
     }
 
@@ -86,49 +175,5 @@ class RestApiBrowser
         } else {
             $this->requestHeaders[$name] = $value;
         }
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    public function setRequestHeader($name, $value)
-    {
-        $this->removeRequestHeader($name);
-        $this->addRequestHeader($name, $value);
-    }
-
-    /**
-     * @param string                $method
-     * @param string                $uri With or without host
-     * @param string|resource|array $body
-     * @param array                 $options
-     */
-    private function createRequest($method, $uri, $body = null, array $options = array())
-    {
-        if (!$this->hasHost($uri)) {
-            $uri = rtrim($this->httpClient->getBaseUrl(), '/') . '/' . ltrim($uri, '/');
-        }
-
-        $this->request = $this->httpClient->createRequest($method, $uri, $this->requestHeaders, $body, $options);
-        // Reset headers used for the HTTP request
-        $this->requestHeaders = array();
-    }
-
-    private function removeRequestHeader($headerName)
-    {
-        if (array_key_exists($headerName, $this->requestHeaders)) {
-            unset($this->requestHeaders[$headerName]);
-        }
-    }
-
-    /**
-     * @param string $uri
-     *
-     * @return bool
-     */
-    private function hasHost($uri)
-    {
-        return strpos($uri, '://') !== false;
     }
 }

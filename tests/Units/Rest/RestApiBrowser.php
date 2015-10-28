@@ -21,7 +21,7 @@ class RestApiBrowser extends atoum
             ->given(
                 $httpClient = $this->mockHttpClient('http://verylastroom.com', 200)
             )
-            ->and($sut = new SUT($httpClient))
+            ->and($sut = new SUT(null, null, $httpClient))
         ;
 
         foreach ($addHeadersSteps as $addHeadersStep) {
@@ -33,6 +33,28 @@ class RestApiBrowser extends atoum
         $this
             ->array($sut->getRequestHeaders())->isIdenticalTo($expectedHeaders)
         ;
+    }
+
+    /**
+     * @param string $baseUrl
+     * @param int $responseStatusCode
+     * @param array $headers
+     *
+     * @return \Ivory\HttpAdapter\HttpAdapterInterface
+     */
+    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = array())
+    {
+        $mockHttpClient = new \Ivory\HttpAdapter\MockHttpAdapter();
+        $mockHttpClient->getConfiguration()->setBaseUri($baseUrl);
+        $messageFactory = new \Ivory\HttpAdapter\Message\MessageFactory($baseUrl);
+        $mockHttpClient->appendResponse(
+            $messageFactory->createResponse(
+                $responseStatusCode,
+                \Ivory\HttpAdapter\Message\RequestInterface::PROTOCOL_VERSION_1_1,
+                $headers
+            )
+        );
+        return $mockHttpClient;
     }
 
     public function addHeaderDataProvider()
@@ -54,7 +76,7 @@ class RestApiBrowser extends atoum
             ->given(
                 $httpClient = $this->mockHttpClient('http://verylastroom.com', 200)
             )
-            ->and($sut = new SUT($httpClient, null, false))
+            ->and($sut = new SUT(null, null, $httpClient))
         ;
 
         foreach ($setHeadersSteps as $addHeadersStep) {
@@ -87,7 +109,7 @@ class RestApiBrowser extends atoum
         // Given
         $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', 200, array());
 
-        $restApiContext = new SUT($mockHttpClient, null, false);
+        $restApiContext = new SUT(null, null, $mockHttpClient);
         foreach ($requestHeaders as $requestHeaderKey => $requestHeaderValue) {
             $restApiContext->addRequestHeader($requestHeaderKey, $requestHeaderValue);
         }
@@ -97,7 +119,7 @@ class RestApiBrowser extends atoum
 
         // Then
         $request = $restApiContext->getRequest();
-        $intersect = array_intersect_key($requestHeaders, $request->getHeaders()->toArray());
+        $intersect = array_intersect_key($requestHeaders, $request->getHeaders());
 
         $this->array($requestHeaders)->isEqualTo($intersect);
     }
@@ -108,19 +130,22 @@ class RestApiBrowser extends atoum
             array(
                 'url' => 'http://verylastroom.com/',
                 'requestHeaders' => array(
-                    array("name" => "value")
+                    "name" => "value"
                 )
             ),
             array(
                 'url' => 'http://verylastroom.com/',
                 'requestHeaders' => array(
-                    array("name1" => "value1"), array("name2" => "value2")
+                    "name1" => "value1",
+                    "name2" => "value2"
+
                 )
             ),
             array(
                 'url' => '/?test=a:2', // Without host with weird query string
                 'requestHeaders' => array(
-                    array("name1" => "value1"), array("name2" => "value2")
+                    "name1" => "value1",
+                    "name2" => "value2"
                 )
             )
         );
@@ -136,13 +161,14 @@ class RestApiBrowser extends atoum
     {
         // Given
         $mockHttpClient = $this->mockHttpClient($baseUrl, 200, array());
-        $restApiContext = new SUT($mockHttpClient, null, false);
+        $restApiContext = new SUT(null, null, $mockHttpClient);
         // When
         $restApiContext->sendRequest('GET', $stepUrl);
         // Then
         $request = $restApiContext->getRequest();
-        $this->string($request->getUrl())->isEqualTo($expectedUrl);
+        $this->string($request->getUri()->__toString())->isEqualTo($expectedUrl);
     }
+
     public function urlWithSlashesProvider()
     {
         return array(
@@ -179,14 +205,14 @@ class RestApiBrowser extends atoum
         // Given
         $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', $statusCode, $responseHeaders);
 
-        $restApiContext = new SUT($mockHttpClient, null, false);
+        $restApiContext = new SUT(null, null, $mockHttpClient);
 
         // When
         $restApiContext->sendRequest('GET', 'http://verylastroom.com/');
 
         // Then
         $response = $restApiContext->getResponse();
-        $intersect = array_intersect_key($responseHeaders, $response->getHeaders()->toArray());
+        $intersect = array_intersect_key($responseHeaders, $response->getHeaders());
 
         $this->array($responseHeaders)->isEqualTo($intersect);
     }
@@ -197,33 +223,16 @@ class RestApiBrowser extends atoum
             array(
                 'statusCode' => 200,
                 'requestHeaders' => array(
-                    array("name" => "value")
+                    "name" => "value"
                 )
             ),
             array(
                 'statusCode' => 400,
                 'requestHeaders' => array(
-                    array("name1" => "value1"), array("name2" => "value2")
+                    "name1" => "value1",
+                    "name2" => "value2"
                 )
             )
         );
-    }
-
-        /**
-     * @param string $baseUrl
-     * @param int    $responseStatusCode
-     * @param array  $headers
-     *
-     * @return \Guzzle\Http\Client
-     */
-    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = array())
-    {
-        $mockHttpClient = new \mock\Guzzle\Http\Client();
-        $mockHttpClient->getMockController()->send = new \Guzzle\Http\Message\Response(
-            $responseStatusCode,
-            $headers
-        );
-        $mockHttpClient->getMockController()->getBaseUrl = $baseUrl;
-        return $mockHttpClient;
     }
 }
