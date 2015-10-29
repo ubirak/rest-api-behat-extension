@@ -4,6 +4,8 @@ namespace Rezzza\RestApiBehatExtension\Rest;
 
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\ClientInterface as HttpClient;
+use Guzzle\Http\Message\Response;
+use Behat\Gherkin\Node\PyStringNode;
 
 class RestApiBrowser
 {
@@ -96,6 +98,17 @@ class RestApiBrowser
     {
         $this->removeRequestHeader($name);
         $this->addRequestHeader($name, $value);
+    }
+
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+        if (null !== $this->responseStorage) {
+            $this->responseStorage->writeRawContent($this->response->getBody(true));
+        }
     }
 
     /**
