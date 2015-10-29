@@ -17,12 +17,15 @@ default:
             rest:
                 base_url: http://localhost:8888
                 store_response: true
+                adaptor_name: curl # Should be one of these adapters : https://github.com/egeloen/ivory-http-adapter/blob/master/doc/adapters.md#factory
     suites:
         default:
             contexts:
                 - Rezzza\RestApiBehatExtension\RestApiContext
                 - Rezzza\RestApiBehatExtension\Json\JsonContext
 ```
+
+Regarding the `adaptor_name` you choose, you will have to install the deps needed on your own.
 
 ## Usage
 You can use directly the `JsonContext` or `RestApiContext` by loading them in your behat.yml or use the `RestApiBrowser` and `JsonInspector` by adding them in the construct of your own context.
