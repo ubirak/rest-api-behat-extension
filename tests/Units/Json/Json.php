@@ -75,7 +75,7 @@ class Json extends atoum
             ->when(
                 $result = $sut->read('foo', $accessor)
             )
-                ->string($result)
+                ->phpString($result)
                     ->isEqualTo('bar')
         ;
     }

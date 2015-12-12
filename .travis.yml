@@ -4,11 +4,13 @@ php:
     - 5.4
     - 5.5
     - 5.6
+    - 7.0
 
 before_script:
-    - composer self-update || true
-    - composer install --dev --prefer-dist
-    - php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" > /dev/null &
+    - composer install --prefer-dist --optimize-autoloader
+# disabling xdebug is needed otherwise it may cause some php7 segfault with unit tests... :(
+    - rm -rf ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+    - php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" &> /dev/null &
 
 script:
     - bin/atoum -ulr
