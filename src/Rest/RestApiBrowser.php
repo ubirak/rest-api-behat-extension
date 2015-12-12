@@ -9,7 +9,6 @@ use Ivory\HttpAdapter\Message\Request;
 use Zend\Diactoros\Stream;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Behat\Gherkin\Node\PyStringNode;
 
 class RestApiBrowser
 {
@@ -154,6 +153,9 @@ class RestApiBrowser
         $this->addRequestHeader($name, $value);
     }
 
+    /**
+     * @param string $headerName
+     */
     private function removeRequestHeader($headerName)
     {
         if (array_key_exists($headerName, $this->requestHeaders)) {

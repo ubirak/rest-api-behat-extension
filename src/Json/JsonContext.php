@@ -110,7 +110,7 @@ class JsonContext implements Context, SnippetAcceptingContext
         }
 
         if ($e === null) {
-            throw new \Exception(sprintf("The node '%s' exists and contains '%s'.", $jsonNode , json_encode($realValue)));
+            throw new \Exception(sprintf("The node '%s' exists and contains '%s'.", $jsonNode, json_encode($realValue)));
         }
     }
 
@@ -178,7 +178,7 @@ class JsonContext implements Context, SnippetAcceptingContext
             ));
         }
 
-        $filename = $this->jsonSchemaBaseUrl.'/'.$filename;
+        $filename = $this->jsonSchemaBaseUrl . '/' . $filename;
 
         if (false === is_file($filename)) {
             throw new \RuntimeException(sprintf(
