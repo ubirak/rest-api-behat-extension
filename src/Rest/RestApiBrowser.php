@@ -129,7 +129,7 @@ class RestApiBrowser
             $stream->write($body);
         }
         $this->request = new Request($uri, $method, $stream, $this->requestHeaders);
-        $this->response = $this->httpClient->send($uri, $method, $this->requestHeaders, $body);
+        $this->response = $this->httpClient->sendRequest($this->request);
         // Reset headers used for the HTTP request
         $this->requestHeaders = array();
     }
