@@ -42,7 +42,7 @@ class RestApiBrowser extends atoum
      *
      * @return \Ivory\HttpAdapter\HttpAdapterInterface
      */
-    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = array())
+    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = [])
     {
         $mockHttpClient = new \Ivory\HttpAdapter\MockHttpAdapter();
         $mockHttpClient->getConfiguration()->setBaseUri($baseUrl);
@@ -59,11 +59,11 @@ class RestApiBrowser extends atoum
 
     public function addHeaderDataProvider()
     {
-        return array(
-            array(array(), array()),
-            array(array(array("name" => "value")), array("name" => "value")),
-            array(array(array("name" => "value"), array("name" => "value2")), array("name" => array("value", "value2"))),
-        );
+        return [
+            [[], []],
+            [[["name" => "value"]], ["name" => "value"]],
+            [[["name" => "value"], ["name" => "value2"]], ["name" => ["value", "value2"]]],
+        ];
     }
 
     /**
@@ -92,11 +92,11 @@ class RestApiBrowser extends atoum
 
     public function setHeaderDataProvider()
     {
-        return array(
-            array(array(), array()),
-            array(array(array("name" => "value")), array("name" => "value")),
-            array(array(array("name" => "value"), array("name" => "value2")), array("name" => "value2")),
-        );
+        return [
+            [[], []],
+            [[["name" => "value"]], ["name" => "value"]],
+            [[["name" => "value"], ["name" => "value2"]], ["name" => "value2"]],
+        ];
     }
 
     /**
@@ -107,7 +107,7 @@ class RestApiBrowser extends atoum
     public function test_get_request($url, array $requestHeaders)
     {
         // Given
-        $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', 200, array());
+        $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', 200, []);
 
         $restApiContext = new SUT(null, null, $mockHttpClient);
         foreach ($requestHeaders as $requestHeaderKey => $requestHeaderValue) {
@@ -126,29 +126,29 @@ class RestApiBrowser extends atoum
 
     public function requestDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'url' => 'http://verylastroom.com/',
-                'requestHeaders' => array(
+                'requestHeaders' => [
                     "name" => "value"
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'url' => 'http://verylastroom.com/',
-                'requestHeaders' => array(
+                'requestHeaders' => [
                     "name1" => "value1",
                     "name2" => "value2"
 
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'url' => '/?test=a:2', // Without host with weird query string
-                'requestHeaders' => array(
+                'requestHeaders' => [
                     "name1" => "value1",
                     "name2" => "value2"
-                )
-            )
-        );
+                ]
+            ]
+        ];
     }
 
         /**
@@ -160,7 +160,7 @@ class RestApiBrowser extends atoum
     public function test_create_request_with_slashes_to_clean($baseUrl, $stepUrl, $expectedUrl)
     {
         // Given
-        $mockHttpClient = $this->mockHttpClient($baseUrl, 200, array());
+        $mockHttpClient = $this->mockHttpClient($baseUrl, 200, []);
         $restApiContext = new SUT(null, null, $mockHttpClient);
         // When
         $restApiContext->sendRequest('GET', $stepUrl);
@@ -171,28 +171,28 @@ class RestApiBrowser extends atoum
 
     public function urlWithSlashesProvider()
     {
-        return array(
-            array( // Trim right + left
+        return [
+            [ // Trim right + left
                 'baseUrl' => 'http://verylastroom.com/',
                 'stepUrl' => '/contact/',
                 'expectedUrl' => 'http://verylastroom.com/contact/'
-            ),
-            array( // Trim left
+            ],
+            [ // Trim left
                 'baseUrl' => 'http://verylastroom.com',
                 'stepUrl' => '/contact/',
                 'expectedUrl' => 'http://verylastroom.com/contact/'
-            ),
-            array( // Trim right
+            ],
+            [ // Trim right
                 'baseUrl' => 'http://verylastroom.com/',
                 'stepUrl' => 'contact/',
                 'expectedUrl' => 'http://verylastroom.com/contact/'
-            ),
-            array( // Add missing slash
+            ],
+            [ // Add missing slash
                 'baseUrl' => 'http://verylastroom.com',
                 'stepUrl' => 'contact/',
                 'expectedUrl' => 'http://verylastroom.com/contact/'
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -219,20 +219,20 @@ class RestApiBrowser extends atoum
 
     public function responseDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'statusCode' => 200,
-                'requestHeaders' => array(
+                'requestHeaders' => [
                     "name" => "value"
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'statusCode' => 400,
-                'requestHeaders' => array(
+                'requestHeaders' => [
                     "name1" => "value1",
                     "name2" => "value2"
-                )
-            )
-        );
+                ]
+            ]
+        ];
     }
 }

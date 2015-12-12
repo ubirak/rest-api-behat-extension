@@ -23,7 +23,7 @@ class RestApiBrowser
     private $response;
 
     /** @var array */
-    private $requestHeaders = array();
+    private $requestHeaders = [];
 
     /** @var ResponseStorage */
     private $responseStorage;
@@ -131,7 +131,7 @@ class RestApiBrowser
         $this->request = new Request($uri, $method, $stream, $this->requestHeaders);
         $this->response = $this->httpClient->sendRequest($this->request);
         // Reset headers used for the HTTP request
-        $this->requestHeaders = array();
+        $this->requestHeaders = [];
     }
 
     /**
@@ -169,7 +169,7 @@ class RestApiBrowser
     {
         if (isset($this->requestHeaders[$name])) {
             if (!is_array($this->requestHeaders[$name])) {
-                $this->requestHeaders[$name] = array($this->requestHeaders[$name]);
+                $this->requestHeaders[$name] = [$this->requestHeaders[$name]];
             }
             $this->requestHeaders[$name][] = $value;
         } else {
