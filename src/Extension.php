@@ -21,7 +21,7 @@ class Extension implements ExtensionInterface
 
         if (true === $config['rest']['store_response']) {
             $definitionRestApiBrowser = $container->findDefinition('rezzza.json_api.rest.rest_api_browser');
-            $definitionRestApiBrowser->addMethodCall('enableResponseStorage', array(new Reference('rezzza.json_api.json.json_storage')));
+            $definitionRestApiBrowser->addMethodCall('enableResponseStorage', [new Reference('rezzza.json_api.json.json_storage')]);
         }
     }
 
