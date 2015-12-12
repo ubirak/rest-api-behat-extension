@@ -14,7 +14,7 @@ $app = new Silex\Application();
 
 $app->match(
     'echo',
-    function (Request $req) {
+    function(Request $req) {
         $ret = array(
             'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
         );

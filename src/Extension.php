@@ -16,7 +16,7 @@ class Extension implements ExtensionInterface
     {
         $container->setParameter('rezzza.json_api.rest.base_url', $config['rest']['base_url']);
         $container->setParameter('rezzza.json_api.rest.adaptor_name', $config['rest']['adaptor_name']);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/Resources'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/Resources'));
         $loader->load('services.xml');
 
         if (true === $config['rest']['store_response']) {
