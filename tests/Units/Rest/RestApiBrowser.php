@@ -166,7 +166,7 @@ class RestApiBrowser extends atoum
         $restApiContext->sendRequest('GET', $stepUrl);
         // Then
         $request = $restApiContext->getRequest();
-        $this->string($request->getUri()->__toString())->isEqualTo($expectedUrl);
+        $this->phpString($request->getUri()->__toString())->isEqualTo($expectedUrl);
     }
 
     public function urlWithSlashesProvider()
