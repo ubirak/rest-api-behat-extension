@@ -16,12 +16,22 @@ Feature: Test send API request
         When I send a POST request to "echo" with body:
         """
         {
-            "name" : "name",
-            "pass": "pass"
+            "username" : "pablo",
+            "password": "money"
         }
         """
         Then the JSON node "method" should be equal to "POST"
         And the JSON node "headers.content-type[0]" should be equal to "application/json"
+        And the JSON node "username" should be equal to "pablo"
+        And the JSON node "password" should be equal to "money"
+
+    Scenario: Sending POST request with form data
+        When I send a POST request to "echo" with form data:
+            | username | pablo |
+            | password | money |
+        Then the response status code should be 200
+        And the JSON node "username" should be equal to "pablo"
+        And the JSON node "password" should be equal to "money"
 
     Scenario: Add same header 2 times
         Given I add "header" header equal to "value"

@@ -163,6 +163,34 @@ class RestApiBrowser extends atoum
     }
 
     /**
+     * @dataProvider formDataUseCase
+     */
+    public function test_we_can_send_body_as_form_data($formData, $expectedBody)
+    {
+        $this
+            ->given(
+                $mockHttpAdapter = $this->mockHttpClient('http://verylastroom.com', 200, []),
+                $restApiBrowser = new SUT(null, null, $mockHttpAdapter)
+            )
+            ->when(
+                $restApiBrowser->sendRequest('POST', '/api', $formData)
+            )
+            ->then
+                ->castToString($mockHttpAdapter->getReceivedRequests()[0]->getBody())
+                    ->isEqualTo($expectedBody)
+        ;
+    }
+
+    public function formDataUseCase()
+    {
+        return [
+            [[], ''],
+            [['username' => 'jean-marc'], 'username=jean-marc'],
+            [['username' => 'jean-marc', 'password' => 'ecureuil'], 'username=jean-marc&password=ecureuil'],
+        ];
+    }
+
+    /**
      * @param string $baseUrl
      * @param int $responseStatusCode
      * @param array $headers
