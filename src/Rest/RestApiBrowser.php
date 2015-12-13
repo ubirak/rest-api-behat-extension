@@ -92,7 +92,7 @@ class RestApiBrowser
     /**
      * @param string $method
      * @param string $url
-     * @param string $body
+     * @param string|array $body
      */
     public function sendRequest($method, $url, $body = null)
     {
@@ -116,17 +116,19 @@ class RestApiBrowser
     /**
      * @param string $method
      * @param string $uri With or without host
-     * @param string|resource|array $body
+     * @param string|array $body
      */
     private function send($method, $uri, $body = null)
     {
         if (!$this->hasHost($uri)) {
             $uri = rtrim($this->httpClient->getConfiguration()->getBaseUri(), '/') . '/' . ltrim($uri, '/');
         }
+        $body = is_array($body) ? http_build_query($body) : $body;
         $stream = new Stream('php://memory', 'rw');
-        if ($body) {
+        if (is_string($body)) {
             $stream->write($body);
         }
+
         $this->request = new Request($uri, $method, $stream, $this->requestHeaders);
         $this->response = $this->httpClient->sendRequest($this->request);
         // Reset headers used for the HTTP request

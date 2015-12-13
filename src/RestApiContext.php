@@ -6,6 +6,7 @@ use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
@@ -45,6 +46,16 @@ class RestApiContext implements Context, SnippetAcceptingContext
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
         $this->restApiBrowser->sendRequest($method, $url, (string) $body);
+    }
+
+    /**
+     * Sends HTTP request to specific URL with POST parameters.
+     *
+     * @When I send a :method request to :url with form data:
+     */
+    public function iSendAPostRequestToWithFormData($method, $url, TableNode $formData)
+    {
+        $this->restApiBrowser->sendRequest($method, $url, $formData->getRowsHash());
     }
 
     /**

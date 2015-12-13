@@ -35,28 +35,6 @@ class RestApiBrowser extends atoum
         ;
     }
 
-    /**
-     * @param string $baseUrl
-     * @param int $responseStatusCode
-     * @param array $headers
-     *
-     * @return \Ivory\HttpAdapter\HttpAdapterInterface
-     */
-    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = [])
-    {
-        $mockHttpClient = new \Ivory\HttpAdapter\MockHttpAdapter();
-        $mockHttpClient->getConfiguration()->setBaseUri($baseUrl);
-        $messageFactory = new \Ivory\HttpAdapter\Message\MessageFactory($baseUrl);
-        $mockHttpClient->appendResponse(
-            $messageFactory->createResponse(
-                $responseStatusCode,
-                \Ivory\HttpAdapter\Message\RequestInterface::PROTOCOL_VERSION_1_1,
-                $headers
-            )
-        );
-        return $mockHttpClient;
-    }
-
     public function addHeaderDataProvider()
     {
         return [
@@ -100,58 +78,6 @@ class RestApiBrowser extends atoum
     }
 
     /**
-     * @dataProvider requestDataProvider
-     * @param string $url
-     * @param array  $requestHeaders
-     */
-    public function test_get_request($url, array $requestHeaders)
-    {
-        // Given
-        $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', 200, []);
-
-        $restApiContext = new SUT(null, null, $mockHttpClient);
-        foreach ($requestHeaders as $requestHeaderKey => $requestHeaderValue) {
-            $restApiContext->addRequestHeader($requestHeaderKey, $requestHeaderValue);
-        }
-
-        // When
-        $restApiContext->sendRequest('GET', $url);
-
-        // Then
-        $request = $restApiContext->getRequest();
-        $intersect = array_intersect_key($requestHeaders, $request->getHeaders());
-
-        $this->array($requestHeaders)->isEqualTo($intersect);
-    }
-
-    public function requestDataProvider()
-    {
-        return [
-            [
-                'url' => 'http://verylastroom.com/',
-                'requestHeaders' => [
-                    "name" => "value"
-                ]
-            ],
-            [
-                'url' => 'http://verylastroom.com/',
-                'requestHeaders' => [
-                    "name1" => "value1",
-                    "name2" => "value2"
-
-                ]
-            ],
-            [
-                'url' => '/?test=a:2', // Without host with weird query string
-                'requestHeaders' => [
-                    "name1" => "value1",
-                    "name2" => "value2"
-                ]
-            ]
-        ];
-    }
-
-        /**
      * @dataProvider urlWithSlashesProvider
      * @param string $baseUrl
      * @param string $stepUrl
@@ -166,7 +92,7 @@ class RestApiBrowser extends atoum
         $restApiContext->sendRequest('GET', $stepUrl);
         // Then
         $request = $restApiContext->getRequest();
-        $this->phpString($request->getUri()->__toString())->isEqualTo($expectedUrl);
+        $this->castToString($request->getUri())->isEqualTo($expectedUrl);
     }
 
     public function urlWithSlashesProvider()
@@ -200,7 +126,7 @@ class RestApiBrowser extends atoum
      * @param int   $statusCode
      * @param array $responseHeaders
      */
-    public function test_get_response($statusCode, array $responseHeaders)
+    public function test_get_return_the_response_we_expected($statusCode, array $responseHeaders)
     {
         // Given
         $mockHttpClient = $this->mockHttpClient('http://verylastroom.com', $statusCode, $responseHeaders);
@@ -222,17 +148,67 @@ class RestApiBrowser extends atoum
         return [
             [
                 'statusCode' => 200,
-                'requestHeaders' => [
+                'responseHeaders' => [
                     "name" => "value"
                 ]
             ],
             [
                 'statusCode' => 400,
-                'requestHeaders' => [
+                'responseHeaders' => [
                     "name1" => "value1",
                     "name2" => "value2"
                 ]
             ]
         ];
+    }
+
+    /**
+     * @dataProvider formDataUseCase
+     */
+    public function test_we_can_send_body_as_form_data($formData, $expectedBody)
+    {
+        $this
+            ->given(
+                $mockHttpAdapter = $this->mockHttpClient('http://verylastroom.com', 200, []),
+                $restApiBrowser = new SUT(null, null, $mockHttpAdapter)
+            )
+            ->when(
+                $restApiBrowser->sendRequest('POST', '/api', $formData)
+            )
+            ->then
+                ->castToString($mockHttpAdapter->getReceivedRequests()[0]->getBody())
+                    ->isEqualTo($expectedBody)
+        ;
+    }
+
+    public function formDataUseCase()
+    {
+        return [
+            [[], ''],
+            [['username' => 'jean-marc'], 'username=jean-marc'],
+            [['username' => 'jean-marc', 'password' => 'ecureuil'], 'username=jean-marc&password=ecureuil'],
+        ];
+    }
+
+    /**
+     * @param string $baseUrl
+     * @param int $responseStatusCode
+     * @param array $headers
+     *
+     * @return \Ivory\HttpAdapter\HttpAdapterInterface
+     */
+    private function mockHttpClient($baseUrl, $responseStatusCode, array $headers = [])
+    {
+        $mockHttpClient = new \Ivory\HttpAdapter\MockHttpAdapter();
+        $mockHttpClient->getConfiguration()->setBaseUri($baseUrl);
+        $messageFactory = new \Ivory\HttpAdapter\Message\MessageFactory($baseUrl);
+        $mockHttpClient->appendResponse(
+            $messageFactory->createResponse(
+                $responseStatusCode,
+                \Ivory\HttpAdapter\Message\RequestInterface::PROTOCOL_VERSION_1_1,
+                $headers
+            )
+        );
+        return $mockHttpClient;
     }
 }
