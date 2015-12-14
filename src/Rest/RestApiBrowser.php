@@ -125,7 +125,7 @@ class RestApiBrowser
         }
         $body = is_array($body) ? http_build_query($body) : $body;
         $stream = new Stream('php://memory', 'rw');
-        if (is_string($body)) {
+        if (is_scalar($body)) {
             $stream->write($body);
         }
 
