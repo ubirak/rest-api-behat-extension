@@ -4,10 +4,12 @@ php:
     - 5.4
     - 5.5
     - 5.6
+    - 7.0
 
 before_script:
-    - composer self-update || true
-    - composer install --dev --prefer-dist
+    - git clone --branch trusty --depth=1 https://github.com/rezzza/travis-ci.git ~/.rezzza.travis-ci
+    - ~/.rezzza.travis-ci/php/bootstrap.sh
+    - composer install --prefer-dist --optimize-autoloader
     - php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" > /dev/null &
 
 script:

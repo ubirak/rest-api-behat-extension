@@ -213,7 +213,7 @@ Received:
         // Then
         $request = $restApiContext->getRequest();
 
-        $this->string($request->getUrl())->isEqualTo($expectedUrl);
+        $this->phpString($request->getUrl())->isEqualTo($expectedUrl);
     }
 
     public function urlWithSlashesProvider()

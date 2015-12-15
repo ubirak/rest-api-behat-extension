@@ -73,7 +73,7 @@ class JsonContext extends BehatContext implements ResponseStorageAware
     {
         $realValue = $this->evaluateJsonNodeValue($jsonNode);
 
-        $this->asserter->string((string) $realValue)->contains($expectedValue);
+        $this->asserter->phpString((string) $realValue)->contains($expectedValue);
     }
 
     /**
@@ -85,7 +85,7 @@ class JsonContext extends BehatContext implements ResponseStorageAware
     {
         $realValue = $this->evaluateJsonNodeValue($jsonNode);
 
-        $this->asserter->string((string) $realValue)->notContains($unexpectedValue);
+        $this->asserter->phpString((string) $realValue)->notContains($unexpectedValue);
     }
 
     /**

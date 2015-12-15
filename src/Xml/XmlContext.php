@@ -232,7 +232,7 @@ class XmlContext extends BehatContext implements ResponseStorageAware
         $elements = $this->theXmlElementShouldExist($element);
 
         $this->asserter
-            ->string($elements->item(0)->nodeValue)
+            ->phpString($elements->item(0)->nodeValue)
             ->contains($text);
     }
 
@@ -246,7 +246,7 @@ class XmlContext extends BehatContext implements ResponseStorageAware
         $elements = $this->theXmlElementShouldExist($element);
 
         $this->asserter
-            ->string($elements->item(0)->nodeValue)
+            ->phpString($elements->item(0)->nodeValue)
             ->notContains($text);
     }
 
