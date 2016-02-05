@@ -90,29 +90,22 @@ class XmlContext extends BehatContext implements ResponseStorageAware
         }
     }
 
-
     /**
      * @Then /^the XML response should be equal to:$/
      */
     public function theResponseXmlShouldBeEqualTo(PyStringNode $expected)
     {
-        $expected = str_replace('\\"', '"', $expected);
-        $actual   = $this->xmlStorage->readXml(false)->saveXml();
+        $expected = new Xml(str_replace('\\"', '"', $expected));
+        $actual   = $this->xmlStorage->readXml(false);
 
-        $message = sprintf(
-            'The string "%s" is not equal to the response of the current page: %s',
-            $expected,
-            $actual
-        );
-
-        $expected = new \SimpleXMLElement($expected);
-        $actual = new \SimpleXMLElement($actual);
-
-        if ($expected->asXML() != $actual->asXML()) {
-            throw new \Exception($message);
+        if (false === $actual->isEqual($expected)) {
+            throw new \Exception(sprintf(
+                'The string "%s" is not equal to the response of the current page: %s',
+                $expected->read(),
+                $actual->read()
+            ));
         }
     }
-
 
     /**
      * Checks that the specified XML element is equal to the given value
@@ -283,10 +276,8 @@ class XmlContext extends BehatContext implements ResponseStorageAware
      */
     public function printLastXmlResponse()
     {
-        $dom = $this->xmlStorage->readXml(false, false);
-        $dom->formatOutput = true;
-        $content = $dom->saveXML();
-        $this->printDebug($content);
+        $xml = $this->xmlStorage->readXml(false);
+        $this->printDebug($xml->pretty());
     }
 
     /**
@@ -295,43 +286,19 @@ class XmlContext extends BehatContext implements ResponseStorageAware
      */
     public function xpath($element)
     {
-        $dom = $this->xmlStorage->readXml(false);
-        $xpath = new \DOMXpath($dom);
-        $namespaces = $this->getNamespaces($dom);
-        $defaultNamespaceUri = $dom->lookupNamespaceURI(null);
-        $defaultNamespacePrefix = $defaultNamespaceUri ? $dom->lookupPrefix($defaultNamespaceUri) : null;
-        foreach ($namespaces as $prefix => $namespace) {
-            if (empty($prefix) && empty($defaultNamespacePrefix) && !empty($defaultNamespaceUri)) {
-                $prefix = 'rootns';
-            }
-            $xpath->registerNamespace($prefix, $namespace);
-        }
-        // "fix" queries to the default namespace if any namespaces are defined
-        if (!empty($namespaces) && empty($defaultNamespacePrefix) && !empty($defaultNamespaceUri)) {
-            for ($i=0; $i < 2; ++$i) {
-                $element = preg_replace('/\/(\w+)(\[[^]]+\])?\//', '/rootns:$1$2/', $element);
-            }
-            $element = preg_replace('/\/(\w+)(\[[^]]+\])?$/', '/rootns:$1$2', $element);
-        }
-        $elements = $xpath->query($element);
+        $elements = $this->xmlStorage->readXml(false)->xpath($element);
+
         return ($elements === false) ? new \DOMNodeList() : $elements;
     }
-    /**
-     * @return \SimpleXMLElement
-     */
-    private function getSimpleXml()
-    {
-        return simplexml_import_dom($this->xmlStorage->readXml(false));
-    }
+
     /**
      * @return array
      */
     private function getNamespaces()
     {
-        return $this->getSimpleXml()
-            ->getNamespaces(true)
-            ;
+        return $this->xmlStorage->readXml(false)->getNamespaces();
     }
+
     /**
      * @BeforeScenario
      */
