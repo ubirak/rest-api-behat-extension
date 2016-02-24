@@ -163,9 +163,11 @@ class RestApiContext implements Context, SnippetAcceptingContext
         $response = $this->getResponse();
 
         echo sprintf(
-            "%s %s :\n%s%s\n",
+            "%s %s :\n%s %s\n%s%s\n",
             $request->getMethod(),
             $request->getUri()->__toString(),
+            $response->getStatusCode(),
+            $response->getReasonPhrase(),
             $this->getRawHeaders($response->getHeaders()),
             $response->getBody()
         );
