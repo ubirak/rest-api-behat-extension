@@ -50,12 +50,23 @@ class JsonContext implements Context, SnippetAcceptingContext
 
     /**
      * @Then /^the JSON node "(?P<jsonNode>[^"]*)" should have (?P<expectedNth>\d+) elements?$/
+     * @Then /^the JSON array node "(?P<jsonNode>[^"]*)" should have (?P<expectedNth>\d+) elements?$/
      */
     public function theJsonNodeShouldHaveElements($jsonNode, $expectedNth)
     {
         $realValue = $this->evaluateJsonNodeValue($jsonNode);
 
         $this->asserter->phpArray($realValue)->hasSize($expectedNth);
+    }
+
+    /**
+     * @Then /^the JSON array node "(?P<jsonNode>[^"]*)" should contain "(?P<expectedValue>.*)" element$/
+     */
+    public function theJsonArrayNodeShouldContainElements($jsonNode, $expectedValue)
+    {
+        $realValue = $this->evaluateJsonNodeValue($jsonNode);
+
+        $this->asserter->phpArray($realValue)->contains($expectedValue);
     }
 
     /**

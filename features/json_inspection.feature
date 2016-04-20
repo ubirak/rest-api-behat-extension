@@ -16,7 +16,11 @@ Feature: Test json inspection payload
                 ],
                 "fooo": {
                     "foo": "bar"
-                }
+                },
+                "fooarray": [
+                    "bar1",
+                    "bar2"
+                ]
             }
             """
 
@@ -29,6 +33,10 @@ Feature: Test json inspection payload
 
     Scenario: Json array should have expected size
         Then the JSON node "foos" should have 2 elements
+
+    Scenario: Json array should contain specific values
+        Then the JSON array node "fooarray" should contain "bar1" element
+        And the JSON array node "fooarray" should contain "bar2" element
 
     Scenario: Json nodes should contain specific values
         Then the JSON node "foo" should contain "a"
@@ -105,6 +113,10 @@ Feature: Test json inspection payload
             ],
             "fooo": {
                 "foo": "bar"
-            }
+            },
+            "fooarray": [
+                "bar1",
+                "bar2"
+            ]
         }
         """
