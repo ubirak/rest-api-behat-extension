@@ -68,6 +68,16 @@ class JsonContext implements Context, SnippetAcceptingContext
 
         $this->asserter->phpArray($realValue)->contains($expectedValue);
     }
+    
+    /**
+     * @Then /^the JSON array node "(?P<jsonNode>[^"]*)" should not contain "(?P<expectedValue>.*)" element$/
+     */
+    public function theJsonArrayNodeShouldNotContainElements($jsonNode, $expectedValue)
+    {
+        $realValue = $this->evaluateJsonNodeValue($jsonNode);
+
+        $this->asserter->phpArray($realValue)->notContains($expectedValue);
+    }
 
     /**
      * @Then /^the JSON node "(?P<jsonNode>[^"]*)" should contain "(?P<expectedValue>.*)"$/
