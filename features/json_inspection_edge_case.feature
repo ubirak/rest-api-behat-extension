@@ -19,6 +19,7 @@ Feature: Test json inspection edge cases
                     rest:
                         base_url: http://localhost:8888
                         store_response: true
+                        adaptor_name: curl
         """
 
     Scenario: Reading json before loading json

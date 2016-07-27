@@ -3,6 +3,9 @@
 namespace Rezzza\RestApiBehatExtension\Json;
 
 use JsonSchema\Validator;
+use JsonSchema\RefResolver;
+use JsonSchema\Uri\UriRetriever;
+use JsonSchema\Uri\UriResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class JsonParser
@@ -35,6 +38,6 @@ class JsonParser
 
     public function validate(Json $json, JsonSchema $schema)
     {
-        return $schema->validate($json, new Validator);
+        return $schema->validate($json, new Validator, new RefResolver(new UriRetriever, new UriResolver));
     }
 }

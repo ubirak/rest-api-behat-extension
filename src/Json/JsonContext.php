@@ -68,7 +68,7 @@ class JsonContext implements Context, SnippetAcceptingContext
 
         $this->asserter->phpArray($realValue)->contains($expectedValue);
     }
-    
+
     /**
      * @Then /^the JSON array node "(?P<jsonNode>[^"]*)" should not contain "(?P<expectedValue>.*)" element$/
      */
@@ -140,9 +140,12 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonShouldBeValidAccordingToThisSchema(PyStringNode $jsonSchemaContent)
     {
+        $tempFilename = tempnam(sys_get_temp_dir(), 'rae');
+        file_put_contents($tempFilename, $jsonSchemaContent);
         $this->jsonInspector->validateJson(
-            new JsonSchema($jsonSchemaContent)
+            new JsonSchema($tempFilename)
         );
+        unlink($tempFilename);
     }
 
     /**
@@ -154,8 +157,7 @@ class JsonContext implements Context, SnippetAcceptingContext
 
         $this->jsonInspector->validateJson(
             new JsonSchema(
-                file_get_contents($filename),
-                'file://' . $filename
+                $filename
             )
         );
     }
