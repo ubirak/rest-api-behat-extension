@@ -37,7 +37,7 @@ Feature: Test json inspection payload
     Scenario: Json array should contain specific values
         Then the JSON array node "fooarray" should contain "bar1" element
         And the JSON array node "fooarray" should contain "bar2" element
-        
+
     Scenario: Json array should not contain specific values
         Then the JSON array node "fooarray" should not contain "bar3" element
 

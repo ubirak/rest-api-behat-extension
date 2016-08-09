@@ -49,16 +49,6 @@ class RestApiContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * Sends HTTP request to specific URL with POST parameters.
-     *
-     * @When I send a :method request to :url with form data:
-     */
-    public function iSendAPostRequestToWithFormData($method, $url, TableNode $formData)
-    {
-        $this->restApiBrowser->sendRequest($method, $url, $formData->getRowsHash());
-    }
-
-    /**
      * @param string $code status code
      *
      * @Then /^(?:the )?response status code should be (\d+)$/

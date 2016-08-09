@@ -12,4 +12,3 @@ default:
             rest:
                 base_url: http://localhost:8888
                 store_response: true
-                adaptor_name: curl
