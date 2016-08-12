@@ -17,7 +17,6 @@ default:
             rest:
                 base_url: http://localhost:8888
                 store_response: true
-                adaptor_name: curl # Should be one of these adapters : https://github.com/egeloen/ivory-http-adapter/blob/master/doc/adapters.md#factory
     suites:
         default:
             contexts:
@@ -25,7 +24,12 @@ default:
                 - Rezzza\RestApiBehatExtension\Json\JsonContext
 ```
 
-Regarding the `adaptor_name` you choose, you will have to install the deps needed on your own.
+Then you will need to require in your composer the http client you want to use, and the message factory.
+
+Example:
+```
+composer require --dev guzzlehttp/psr7 php-http/curl-client
+```
 
 ## Usage
 You can use directly the `JsonContext` or `RestApiContext` by loading them in your behat.yml or use the `RestApiBrowser` and `JsonInspector` by adding them in the construct of your own context.

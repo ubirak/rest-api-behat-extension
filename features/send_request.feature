@@ -25,17 +25,9 @@ Feature: Test send API request
         And the JSON node "username" should be equal to "pablo"
         And the JSON node "password" should be equal to "money"
 
-    Scenario: Sending POST request with form data
-        When I send a POST request to "echo" with form data:
-            | username | pablo |
-            | password | money |
-        Then the response status code should be 200
-        And the JSON node "username" should be equal to "pablo"
-        And the JSON node "password" should be equal to "money"
-
     Scenario: Add same header 2 times
         Given I add "header" header equal to "value"
-        Given I add "header" header equal to "value2"
+        And I add "header" header equal to "value2"
         When I send a POST request to "echo"
         Then the response status code should be 200
         And the JSON node "headers.header" should have 1 element
@@ -43,7 +35,7 @@ Feature: Test send API request
 
     Scenario: Set same header 2 times
         Given I set "header" header equal to "value"
-        Given I set "header" header equal to "value2"
+        And I set "header" header equal to "value2"
         When I send a POST request to "echo"
         Then the response status code should be 200
         And the JSON node "headers.header" should have 1 element

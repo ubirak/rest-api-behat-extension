@@ -20,7 +20,6 @@
 
         <service id="rezzza.json_api.rest.rest_api_browser" class="Rezzza\RestApiBehatExtension\Rest\RestApiBrowser" public="false">
             <argument>%rezzza.json_api.rest.base_url%</argument>
-            <argument>%rezzza.json_api.rest.adaptor_name%</argument>
         </service>
 
         <service id="rezzza.json_api.rest.rest_api_browser.resolver" class="Rezzza\RestApiBehatExtension\Rest\RestApiBrowserResolver">
