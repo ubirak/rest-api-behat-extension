@@ -9,6 +9,13 @@
 For now only JSON api is supported to analyze response, but you could use REST part to perform request on any type of api.
 
 ## Install
+
+Require the package as a development dependency :
+
+```sh
+composer require --dev rezzza/rest-api-behat-extension
+```
+
 Don't forget to load the extension and the context if needed in your `behat.yml` :
 ```yaml
 default:
