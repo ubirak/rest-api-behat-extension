@@ -90,9 +90,9 @@ class FeatureContext implements Context, SnippetAcceptingContext
     public function itShouldTerminateWithStatusAndContent($exitStatus, PyStringNode $string)
     {
         if ('fail' === $exitStatus) {
-            $this->asserter->variable($this->getExitCode())->isEqualTo(1);
-        } elseif ('success' === $exitStatus) {
-            $this->asserter->variable($this->getExitCode())->isEqualTo(0);
+            $this->asserter->integer($this->getExitCode())->isEqualTo(1);
+        } elseif ('pass' === $exitStatus) {
+            $this->asserter->integer($this->getExitCode())->isEqualTo(0);
         } else {
             throw new \LogicException('Accepts only "fail" or "pass"');
         }

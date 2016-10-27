@@ -7,6 +7,11 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Tolerance\Operation\Callback;
+use Tolerance\Operation\Runner\RetryOperationRunner;
+use Tolerance\Operation\Runner\CallbackOperationRunner;
+use Tolerance\Waiter\SleepWaiter;
+use Rezzza\RestApiBehatExtension\Tolerance\ExecutionTimeLimited;
 
 class RestApiBrowser
 {
@@ -100,6 +105,20 @@ class RestApiBrowser
         if (null !== $this->responseStorage) {
             $this->responseStorage->writeRawContent((string) $this->response->getBody());
         }
+    }
+
+    public function sendRequestUntil($method, $uri, $body, callable $assertion, $maxExecutionTime = 10)
+    {
+        $runner = new RetryOperationRunner(
+            new CallbackOperationRunner(),
+            new ExecutionTimeLimited(new SleepWaiter(), $maxExecutionTime)
+        );
+        $restApiBrowser = $this;
+        $runner->run(new Callback(function () use ($restApiBrowser, $method, $uri, $body, $assertion) {
+            $restApiBrowser->sendRequest($method, $uri, $body);
+
+            return $assertion();
+        }));
     }
 
     /**
