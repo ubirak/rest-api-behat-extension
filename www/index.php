@@ -54,5 +54,19 @@ $app->match(
         return $response;
     }
 );
+$app->match(
+    'error_random',
+    function (Request $request) {
+        $statusCode = time() % 3 <= 0 ? 200 : 502 ;
+
+        return new JsonResponse([], $statusCode);
+    }
+);
+$app->match(
+    'always_error',
+    function (Request $request) {
+        return new JsonResponse([], 502);
+    }
+);
 
 $app->run();
