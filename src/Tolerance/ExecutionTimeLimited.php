@@ -40,7 +40,6 @@ class ExecutionTimeLimited implements Waiter, StatefulWaiter
      */
     public function resetState()
     {
-        // wait for 0.4.0 to have https://github.com/Tolerance/Tolerance/pull/67
-        // $this->timeEllapsed = 0;
+        $this->timeEllapsed = 0;
     }
 }
