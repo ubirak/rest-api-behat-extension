@@ -1,7 +1,5 @@
 <?php
 
-namespace Rest;
-
 namespace Rezzza\RestApiBehatExtension\Rest;
 
 interface ResponseStorage
