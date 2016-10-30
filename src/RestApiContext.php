@@ -57,7 +57,11 @@ class RestApiContext implements Context, SnippetAcceptingContext
     {
         $expected = intval($code);
         $actual = intval($this->getResponse()->getStatusCode());
-        $this->asserter->variable($actual)->isEqualTo($expected);
+        try {
+            $this->asserter->variable($actual)->isEqualTo($expected);
+        } catch (\Exception $e) {
+            throw new WrongResponseExpectation($e->getMessage(), $this->restApiBrowser->getRequest(), $this->getResponse(), $e);
+        }
     }
 
     /**
@@ -100,10 +104,11 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function printRequestAndResponse()
     {
+        $formatter = $this->buildHttpExchangeFormatter();
         echo "REQUEST:\n";
-        $this->printRequest();
+        echo $formatter->formatRequest();
         echo "\nRESPONSE:\n";
-        $this->printResponse();
+        echo $formatter->formatFullExchange();
     }
 
     /**
@@ -111,37 +116,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function printRequest()
     {
-        $request = $this->getRequest();
-        echo sprintf(
-            "%s %s :\n%s%s\n",
-            $request->getMethod(),
-            $request->getUri(),
-            $this->getRawHeaders($request->getHeaders()),
-            $request->getBody()
-        );
-    }
-
-    /**
-     * @return RequestInterface
-     */
-    private function getRequest()
-    {
-        return $this->restApiBrowser->getRequest();
-    }
-
-    /**
-     * @param array $headers
-     * @return string
-     */
-    private function getRawHeaders(array $headers)
-    {
-        $rawHeaders = '';
-        foreach ($headers as $key => $value) {
-            $rawHeaders .= sprintf("%s: %s\n", $key, is_array($value) ? implode(", ", $value) : $value);
-
-        }
-        $rawHeaders .= "\n";
-        return $rawHeaders;
+        echo $this->buildHttpExchangeFormatter()->formatRequest();
     }
 
     /**
@@ -149,17 +124,11 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function printResponse()
     {
-        $request = $this->getRequest();
-        $response = $this->getResponse();
+        echo $this->buildHttpExchangeFormatter()->formatFullExchange();
+    }
 
-        echo sprintf(
-            "%s %s :\n%s %s\n%s%s\n",
-            $request->getMethod(),
-            $request->getUri()->__toString(),
-            $response->getStatusCode(),
-            $response->getReasonPhrase(),
-            $this->getRawHeaders($response->getHeaders()),
-            $response->getBody()
-        );
+    private function buildHttpExchangeFormatter()
+    {
+        return new Rest\HttpExchangeFormatter($this->restApiBrowser->getRequest(), $this->getResponse());
     }
 }

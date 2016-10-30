@@ -43,9 +43,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonNodeShouldBeEqualTo($jsonNode, $expectedValue)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->variable($realValue)->isEqualTo($expectedValue);
+        $this->assert(function () use ($jsonNode, $expectedValue) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->variable($realValue)->isEqualTo($expectedValue);
+        });
     }
 
     /**
@@ -54,9 +55,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonNodeShouldHaveElements($jsonNode, $expectedNth)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->phpArray($realValue)->hasSize($expectedNth);
+        $this->assert(function () use ($jsonNode, $expectedNth) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->phpArray($realValue)->hasSize($expectedNth);
+        });
     }
 
     /**
@@ -64,9 +66,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonArrayNodeShouldContainElements($jsonNode, $expectedValue)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->phpArray($realValue)->contains($expectedValue);
+        $this->assert(function () use ($jsonNode, $expectedValue) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->phpArray($realValue)->contains($expectedValue);
+        });
     }
 
     /**
@@ -74,9 +77,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonArrayNodeShouldNotContainElements($jsonNode, $expectedValue)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->phpArray($realValue)->notContains($expectedValue);
+        $this->assert(function () use ($jsonNode, $expectedValue) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->phpArray($realValue)->notContains($expectedValue);
+        });
     }
 
     /**
@@ -84,9 +88,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonNodeShouldContain($jsonNode, $expectedValue)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->string((string) $realValue)->contains($expectedValue);
+        $this->assert(function () use ($jsonNode, $expectedValue) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->string((string) $realValue)->contains($expectedValue);
+        });
     }
 
     /**
@@ -96,9 +101,10 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonNodeShouldNotContain($jsonNode, $unexpectedValue)
     {
-        $realValue = $this->evaluateJsonNodeValue($jsonNode);
-
-        $this->asserter->string((string) $realValue)->notContains($unexpectedValue);
+        $this->assert(function () use ($jsonNode, $unexpectedValue) {
+            $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $this->asserter->string((string) $realValue)->notContains($unexpectedValue);
+        });
     }
 
     /**
@@ -111,7 +117,7 @@ class JsonContext implements Context, SnippetAcceptingContext
         try {
             $this->evaluateJsonNodeValue($jsonNode);
         } catch (\Exception $e) {
-            throw new \Exception(sprintf("The node '%s' does not exist.", $jsonNode), 0, $e);
+            throw new WrongJsonExpectation(sprintf("The node '%s' does not exist.", $jsonNode), $this->readJson(), $e);
         }
     }
 
@@ -131,7 +137,11 @@ class JsonContext implements Context, SnippetAcceptingContext
         }
 
         if ($e === null) {
-            throw new \Exception(sprintf("The node '%s' exists and contains '%s'.", $jsonNode, json_encode($realValue)));
+            throw new WrongJsonExpectation(
+                sprintf("The node '%s' exists and contains '%s'.", $jsonNode, json_encode($realValue)),
+                $this->readJson(),
+                $e
+            );
         }
     }
 
@@ -142,9 +152,11 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $tempFilename = tempnam(sys_get_temp_dir(), 'rae');
         file_put_contents($tempFilename, $jsonSchemaContent);
-        $this->jsonInspector->validateJson(
-            new JsonSchema($tempFilename)
-        );
+        $this->assert(function () use ($tempFilename) {
+            $this->jsonInspector->validateJson(
+                new JsonSchema($tempFilename)
+            );
+        });
         unlink($tempFilename);
     }
 
@@ -155,11 +167,11 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $filename = $this->resolveFilename($filename);
 
-        $this->jsonInspector->validateJson(
-            new JsonSchema(
-                $filename
-            )
-        );
+        $this->assert(function () use ($filename) {
+            $this->jsonInspector->validateJson(
+                new JsonSchema($filename)
+            );
+        });
     }
 
     /**
@@ -175,7 +187,9 @@ class JsonContext implements Context, SnippetAcceptingContext
             throw new \Exception('The expected JSON is not a valid');
         }
 
-        $this->asserter->castToString($realJsonValue)->isEqualTo((string) $expectedJsonValue);
+        $this->assert(function () use ($realJsonValue, $expectedJsonValue) {
+            $this->asserter->castToString($realJsonValue)->isEqualTo((string) $expectedJsonValue);
+        });
     }
 
     private function evaluateJsonNodeValue($jsonNode)
@@ -211,5 +225,14 @@ class JsonContext implements Context, SnippetAcceptingContext
         }
 
         return realpath($filename);
+    }
+
+    private function assert(callable $assertion)
+    {
+        try {
+            $assertion();
+        } catch (\Exception $e) {
+            throw new WrongJsonExpectation($e->getMessage(), $this->readJson(), $e);
+        }
     }
 }
