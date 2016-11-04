@@ -60,7 +60,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
         try {
             $this->asserter->variable($actual)->isEqualTo($expected);
         } catch (\Exception $e) {
-            throw new WrongResponseExpectation($e->getMessage(), $this->restApiBrowser->getRequest(), $this->getResponse(), $e);
+            throw new Rest\WrongResponseExpectation($e->getMessage(), $this->restApiBrowser->getRequest(), $this->getResponse(), $e);
         }
     }
 
