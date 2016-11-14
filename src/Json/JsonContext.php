@@ -211,6 +211,24 @@ class JsonContext implements Context, SnippetAcceptingContext
         $this->theJsonPathExpressionShouldBeEqualToJson($pathExpression, (string) $expectedJson);
     }
 
+    /**
+     * @Then the JSON path expression :pathExpression should have result
+     */
+    public function theJsonPathExpressionShouldHaveResult($pathExpression)
+    {
+        $json = $this->jsonInspector->searchJsonPath($pathExpression);
+        $this->asserter->variable($json)->isNotNull();
+    }
+
+    /**
+     * @Then the JSON path expression :pathExpression should not have result
+     */
+    public function theJsonPathExpressionShouldNotHaveResult($pathExpression)
+    {
+        $json = $this->jsonInspector->searchJsonPath($pathExpression);
+        $this->asserter->variable($json)->isNull();
+    }
+
     private function evaluateJsonNodeValue($jsonNode)
     {
         return $this->jsonInspector->readJsonNodeValue($jsonNode);
