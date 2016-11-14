@@ -11,10 +11,13 @@ class JsonInspector
 
     private $jsonStorage;
 
-    public function __construct(JsonStorage $jsonStorage, JsonParser $jsonParser)
+    private $jsonSearcher;
+
+    public function __construct(JsonStorage $jsonStorage, JsonParser $jsonParser, JsonSearcher $jsonSearcher)
     {
         $this->jsonParser = $jsonParser;
         $this->jsonStorage = $jsonStorage;
+        $this->jsonSearcher = $jsonSearcher;
     }
 
     public function readJsonNodeValue($jsonNodeExpression)
@@ -23,6 +26,11 @@ class JsonInspector
             $this->readJson(),
             $jsonNodeExpression
         );
+    }
+
+    public function searchJsonPath($pathExpression)
+    {
+        return $this->jsonSearcher->search($this->readJson(), $pathExpression);
     }
 
     public function validateJson(JsonSchema $jsonSchema)

@@ -7,10 +7,12 @@
         <service id="rezzza.json_api.json.json_parser" class="Rezzza\RestApiBehatExtension\Json\JsonParser" public="false">
             <argument>javascript</argument>
         </service>
+        <service id="rezzza.json_api.json.json_searcher" class="Rezzza\RestApiBehatExtension\Json\JsonSearcher" public="false" />
 
         <service id="rezzza.json_api.json.json_inspector" class="Rezzza\RestApiBehatExtension\Json\JsonInspector" public="false">
             <argument type="service" id="rezzza.json_api.json.json_storage" />
             <argument type="service" id="rezzza.json_api.json.json_parser" />
+            <argument type="service" id="rezzza.json_api.json.json_searcher" />
         </service>
 
         <service id="rezzza.json_api.json.json_inspector.resolver" class="Rezzza\RestApiBehatExtension\Json\JsonInspectorResolver">
