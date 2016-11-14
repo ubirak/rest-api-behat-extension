@@ -8,9 +8,14 @@ class Json
 {
     private $content;
 
-    public function __construct($content)
+    public function __construct($content, $encodedAsString = true)
     {
-        $this->content = $this->decode((string) $content);
+        $this->content = true === $encodedAsString ? $this->decode((string) $content) : $content;
+    }
+
+    public static function fromRawContent($content)
+    {
+        return new static($content, false);
     }
 
     public function read($expression, PropertyAccessor $accessor)

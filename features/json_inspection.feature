@@ -11,7 +11,7 @@ Feature: Test json inspection payload
                 "foofoo": true,
                 "fooint": 1337,
                 "foos": [
-                    {"foo": "bar"},
+                    {"foo": "bar", "bar": "bar"},
                     {"foo2": "bar2"}
                 ],
                 "fooo": {
@@ -111,7 +111,7 @@ Feature: Test json inspection payload
             "foofoo": true,
             "fooint": 1337,
             "foos": [
-                {"foo": "bar"},
+                {"foo": "bar", "bar": "bar"},
                 {"foo2": "bar2"}
             ],
             "fooo": {
@@ -122,4 +122,10 @@ Feature: Test json inspection payload
                 "bar2"
             ]
         }
+        """
+
+    Scenario: JSON path expression
+        Then the JSON path expression "foos[?foo == 'bar'].bar" should be equal to:
+        """
+        ["bar"]
         """
