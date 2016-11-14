@@ -197,6 +197,7 @@ class JsonContext implements Context, SnippetAcceptingContext
      */
     public function theJsonExpressionShouldBeEqualTo($pathExpression, PyStringNode $expectedJson)
     {
+        $expectedJson = new Json($expectedJson);
         $actualJson = Json::fromRawContent($this->jsonInspector->searchJsonPath($pathExpression));
 
         $this->asserter->castToString($actualJson)->isEqualTo((string) $expectedJson);
