@@ -124,6 +124,9 @@ Feature: Test json inspection payload
         }
         """
 
+    Scenario: JSON path expression inline
+        Then the JSON path expression "foos[?foo == 'bar'].bar" should be equal to json '["bar"]'
+
     Scenario: JSON path expression
         Then the JSON path expression "foos[?foo == 'bar'].bar" should be equal to:
         """
