@@ -24,9 +24,6 @@ class RestApiBrowser
     /** @var ResponseInterface */
     private $response;
 
-    /** @var array */
-    private $requestHeaders = [];
-
     /** @var ResponseStorage */
     private $responseStorage;
 
@@ -83,23 +80,19 @@ class RestApiBrowser
         return $this->request;
     }
 
-    public function getRequestHeaders()
-    {
-        return $this->requestHeaders;
-    }
-
     /**
      * @param string $method
      * @param string $uri
      * @param string|array $body
+     * @param array $headers
      */
-    public function sendRequest($method, $uri, $body = null)
+    public function sendRequest($method, $uri, $body = null, array $headers = [])
     {
         if (false === $this->hasHost($uri)) {
             $uri = rtrim($this->host, '/').'/'.ltrim($uri, '/');
         }
 
-        $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);
+        $this->request = $this->messageFactory->createRequest($method, $uri, $headers, $body);
         $this->response = $this->httpClient->sendRequest($this->request);
 
         if (null !== $this->responseStorage) {
@@ -107,51 +100,18 @@ class RestApiBrowser
         }
     }
 
-    public function sendRequestUntil($method, $uri, $body, callable $assertion, $maxExecutionTime = 10)
+    public function sendRequestUntil($method, $uri, $body, array $headers, callable $assertion, $maxExecutionTime = 10)
     {
         $runner = new RetryOperationRunner(
             new CallbackOperationRunner(),
             new ExecutionTimeLimited(new SleepWaiter(), $maxExecutionTime)
         );
         $restApiBrowser = $this;
-        $runner->run(new Callback(function () use ($restApiBrowser, $method, $uri, $body, $assertion) {
-            $restApiBrowser->sendRequest($method, $uri, $body);
+        $runner->run(new Callback(function () use ($restApiBrowser, $method, $uri, $body, $assertion, $headers) {
+            $restApiBrowser->sendRequest($method, $uri, $body, $headers);
 
             return $assertion();
         }));
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    public function setRequestHeader($name, $value)
-    {
-        $this->removeRequestHeader($name);
-        $this->addRequestHeader($name, $value);
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    public function addRequestHeader($name, $value)
-    {
-        if (isset($this->requestHeaders[$name])) {
-            $this->requestHeaders[$name] .= ', '.$value;
-        } else {
-            $this->requestHeaders[$name] = $value;
-        }
-    }
-
-    /**
-     * @param string $headerName
-     */
-    private function removeRequestHeader($headerName)
-    {
-        if (array_key_exists($headerName, $this->requestHeaders)) {
-            unset($this->requestHeaders[$headerName]);
-        }
     }
 
     /**
