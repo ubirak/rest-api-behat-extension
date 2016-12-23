@@ -11,7 +11,7 @@ class HttpExchangeFormatter
 
     private $response;
 
-    public function __construct(RequestInterface $request, ResponseInterface $response)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null)
     {
         $this->request = $request;
         $this->response = $response;
@@ -19,6 +19,10 @@ class HttpExchangeFormatter
 
     public function formatRequest()
     {
+        if (null === $this->request) {
+            throw new \LogicException('You should send a request before printing it.');
+        }
+
         return sprintf(
             "%s %s :\n%s%s\n",
             $this->request->getMethod(),
@@ -30,6 +34,10 @@ class HttpExchangeFormatter
 
     public function formatFullExchange()
     {
+        if (null === $this->request || null === $this->response) {
+            throw new \LogicException('You should send a request and store its response before printing them.');
+        }
+
         return sprintf(
             "%s %s :\n%s %s\n%s%s\n",
             $this->request->getMethod(),
