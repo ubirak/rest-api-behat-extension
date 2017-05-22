@@ -59,7 +59,7 @@ Feature: Send request until
                     $restApiBrowser = $this->restApiBrowser;
                     $asserter = $this->asserter;
                     $this->restApiBrowser->sendRequestUntil(
-                        'GET', 'error_random', null, function () use ($restApiBrowser, $asserter) {
+                        'GET', 'error_random', null, [], function () use ($restApiBrowser, $asserter) {
                             $asserter->integer($restApiBrowser->getResponse()->getStatusCode())->isEqualTo(200);
                         }
                     );
@@ -111,7 +111,7 @@ Feature: Send request until
                     $restApiBrowser = $this->restApiBrowser;
                     $asserter = $this->asserter;
                     $this->restApiBrowser->sendRequestUntil(
-                        'GET', 'always_error', null, function () use ($restApiBrowser, $asserter) {
+                        'GET', 'always_error', null, [], function () use ($restApiBrowser, $asserter) {
                             $asserter->integer($restApiBrowser->getResponse()->getStatusCode())->isEqualTo(200);
                         },
                         5

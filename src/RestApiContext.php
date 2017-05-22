@@ -17,6 +17,8 @@ class RestApiContext implements Context, SnippetAcceptingContext
 
     private $restApiBrowser;
 
+    private $requestHeaders = [];
+
     public function __construct(RestApiBrowser $restApiBrowser)
     {
         $this->restApiBrowser = $restApiBrowser;
@@ -31,7 +33,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function iSendARequest($method, $url)
     {
-        $this->restApiBrowser->sendRequest($method, $url);
+        $this->restApiBrowser->sendRequest($method, $url, null, $this->requestHeaders);
     }
 
     /**
@@ -45,7 +47,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
-        $this->restApiBrowser->sendRequest($method, $url, (string) $body);
+        $this->restApiBrowser->sendRequest($method, $url, (string) $body, $this->requestHeaders);
     }
 
     /**
@@ -77,7 +79,8 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function iSetHeaderEqualTo($headerName, $headerValue)
     {
-        $this->restApiBrowser->setRequestHeader($headerName, $headerValue);
+        $this->removeRequestHeader($headerName);
+        $this->addRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -85,7 +88,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      */
     public function iAddHeaderEqualTo($headerName, $headerValue)
     {
-        $this->restApiBrowser->addRequestHeader($headerName, $headerValue);
+        $this->addRequestHeader($headerName, $headerValue);
     }
 
     /**
@@ -96,7 +99,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     public function iSetBasicAuthenticationWithAnd($username, $password)
     {
         $authorization = base64_encode($username . ':' . $password);
-        $this->restApiBrowser->setRequestHeader('Authorization', 'Basic ' . $authorization);
+        $this->setRequestHeader('Authorization', 'Basic ' . $authorization);
     }
 
     /**
@@ -130,5 +133,28 @@ class RestApiContext implements Context, SnippetAcceptingContext
     private function buildHttpExchangeFormatter()
     {
         return new Rest\HttpExchangeFormatter($this->restApiBrowser->getRequest(), $this->getResponse());
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    private function addRequestHeader($name, $value)
+    {
+        if (isset($this->requestHeaders[$name])) {
+            $this->requestHeaders[$name] .= ', '.$value;
+        } else {
+            $this->requestHeaders[$name] = $value;
+        }
+    }
+
+    /**
+     * @param string $headerName
+     */
+    private function removeRequestHeader($headerName)
+    {
+        if (array_key_exists($headerName, $this->requestHeaders)) {
+            unset($this->requestHeaders[$headerName]);
+        }
     }
 }
