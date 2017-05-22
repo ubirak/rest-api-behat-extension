@@ -101,6 +101,7 @@ class RestApiBrowser
 
         $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);
         $this->response = $this->httpClient->sendRequest($this->request);
+        $this->requestHeaders = [];
 
         if (null !== $this->responseStorage) {
             $this->responseStorage->writeRawContent((string) $this->response->getBody());
