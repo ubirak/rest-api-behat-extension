@@ -1,16 +1,28 @@
 language: php
-
-php:
-    - 5.6
-    - 7.0
-    - 7.1
-
+matrix:
+    include:
+        -
+            php: 5.6
+        -
+            php: 7
+        -
+            php: 7.1
+            env: deps=low-json-schema
+        -
+            php: 7.1
+            env: deps=high-json-schema
 before_script:
-    - git clone --branch trusty --depth=1 https://github.com/rezzza/travis-ci.git ~/.rezzza.travis-ci
+    - >-
+        git clone --branch trusty --depth=1
+        https://github.com/rezzza/travis-ci.git ~/.rezzza.travis-ci
     - ~/.rezzza.travis-ci/php/bootstrap.sh
-    - composer install --optimize-autoloader
-    - php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" &> /dev/null &
-
+    - composer global require hirak/prestissimo
+    - composer install
+    - |
+        if [[ $deps = low-json-schema ]] ; then
+            composer update --prefer-lowest --prefer-stable justinrainbow/json-schema
+        fi
+    - 'php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" &> /dev/null &'
 script:
     - bin/atoum -ulr
     - bin/behat -f progress

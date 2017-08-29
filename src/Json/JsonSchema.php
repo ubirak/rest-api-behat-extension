@@ -22,7 +22,7 @@ class JsonSchema
         $schema = $schemaStorage->resolveRef('file://' . realpath($this->filename));
         $data = $json->getRawContent();
 
-        $validator->validate($data, $schema);
+        $validator->check($data, $schema);
 
         if (!$validator->isValid()) {
             $msg = "JSON does not validate. Violations:" . PHP_EOL;

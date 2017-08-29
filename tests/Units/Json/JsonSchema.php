@@ -23,7 +23,7 @@ class JsonSchema extends atoum
                 $result = $sut->validate($json, $validator, $schemaStorage)
             )
                 ->mock($validator)
-                    ->call('validate')
+                    ->call('check')
                     ->withArguments(json_decode('{"foo":"bar"}'), 'mySchema')
                     ->once()
 
