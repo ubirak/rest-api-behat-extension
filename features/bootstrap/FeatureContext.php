@@ -43,7 +43,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function prepareScenario()
     {
-        $dir = self::workingDir() . DIRECTORY_SEPARATOR . md5(microtime() * rand(0, 10000));
+        $dir = self::workingDir() . DIRECTORY_SEPARATOR . (md5(microtime(true) * rand(0, 10000)));
         mkdir($dir . '/features/bootstrap', 0777, true);
 
         $phpFinder = new PhpExecutableFinder();
