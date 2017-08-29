@@ -16,14 +16,14 @@ class JsonSchema extends atoum
                 $validator = new \mock\JsonSchema\Validator,
                 $validator->getMockController()->check = true,
                 $this->mockGenerator->orphanize('__construct'),
-                $refResolver = new \mock\JsonSchema\RefResolver,
-                $refResolver->getMockController()->resolve = 'mySchema'
+                $schemaStorage = new \mock\JsonSchema\SchemaStorage,
+                $schemaStorage->getMockController()->resolveRef = 'mySchema'
             )
             ->when(
-                $result = $sut->validate($json, $validator, $refResolver)
+                $result = $sut->validate($json, $validator, $schemaStorage)
             )
                 ->mock($validator)
-                    ->call('check')
+                    ->call('validate')
                     ->withArguments(json_decode('{"foo":"bar"}'), 'mySchema')
                     ->once()
 
@@ -45,13 +45,14 @@ class JsonSchema extends atoum
                     ['property' => 'bar', 'message' => 'not found']
                 ],
                 $this->mockGenerator->orphanize('__construct'),
-                $refResolver = new \mock\JsonSchema\RefResolver,
-                $refResolver->getMockController()->resolve = 'mySchema'
+                $schemaStorage = new \mock\JsonSchema\SchemaStorage,
+                $schemaStorage->getMockController()->resolveRef = 'mySchema'
             )
-            ->exception(function () use ($sut, $json, $validator, $refResolver) {
-                $sut->validate($json, $validator, $refResolver);
+            ->exception(function () use ($sut, $json, $validator, $schemaStorage) {
+                $sut->validate($json, $validator, $schemaStorage);
             })
-                ->hasMessage(<<<"ERROR"
+                ->hasMessage(
+                    <<<"ERROR"
 JSON does not validate. Violations:
   - [foo] invalid
   - [bar] not found

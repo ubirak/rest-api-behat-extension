@@ -2,7 +2,7 @@
 
 namespace Rezzza\RestApiBehatExtension\Json;
 
-use JsonSchema\RefResolver;
+use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
 
 class JsonSchema
@@ -17,11 +17,12 @@ class JsonSchema
         $this->filename = $filename;
     }
 
-    public function validate(Json $json, Validator $validator, RefResolver $refResolver)
+    public function validate(Json $json, Validator $validator, SchemaStorage $schemaStorage)
     {
-        $schema = $refResolver->resolve('file://' . realpath($this->filename));
+        $schema = $schemaStorage->resolveRef('file://' . realpath($this->filename));
+        $data = $json->getRawContent();
 
-        $validator->check($json->getRawContent(), $schema);
+        $validator->validate($data, $schema);
 
         if (!$validator->isValid()) {
             $msg = "JSON does not validate. Violations:" . PHP_EOL;
