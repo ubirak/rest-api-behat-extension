@@ -36,7 +36,10 @@
         "php-http/mock-client": "^0.3.2"
     },
     "config": {
-        "bin-dir": "bin/"
+        "bin-dir": "bin/",
+        "preferred-install": {
+            "*": "dist"
+        }
     },
     "extra": {
         "branch-alias": {
