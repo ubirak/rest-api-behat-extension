@@ -1,28 +1,38 @@
 language: php
+dist: trusty
+cache:
+    directories:
+        - vendor
+php:
+    - 5.6
+    - 7
+    - 7.1
+    - nightly
+env:
+    matrix:
+        - COMPOSER_PREFER="--prefer-stable"
+        - COMPOSER_PREFER="--prefer-lowest"
 matrix:
-    include:
+    allow_failures:
         -
-            php: 5.6
-        -
-            php: 7
-        -
-            php: 7.1
-            env: deps=low-json-schema
-        -
-            php: 7.1
-            env: deps=high-json-schema
+            php: nightly
+    fast_finish: true
 before_script:
     - >-
-        git clone --branch trusty --depth=1
-        https://github.com/rezzza/travis-ci.git ~/.rezzza.travis-ci
-    - ~/.rezzza.travis-ci/php/bootstrap.sh
-    - composer global require hirak/prestissimo
-    - composer install
+        echo 'always_populate_raw_post_data = -1' >> ~/.phpenv/versions/$(phpenv
+        version-name)/etc/conf.d/travis.ini
     - |
-        if [[ $deps = low-json-schema ]] ; then
-            composer update --prefer-lowest --prefer-stable justinrainbow/json-schema
+        if [ ! $(php -m | grep -ci xdebug) -eq 0 ] ; then
+            phpenv config-rm xdebug.ini
+        fi
+    - composer global require hirak/prestissimo
+    - composer update $COMPOSER_PREFER
+    - |
+        # We force latest atoum on php >=7
+        if [ $(php -r 'echo phpversion();' | sed -e 's/\..*//g') -eq 7 ] ; then
+            composer update --prefer-stable atoum/atoum
         fi
     - 'php -S 127.0.0.1:8888 -t "$TRAVIS_BUILD_DIR/www" &> /dev/null &'
 script:
-    - bin/atoum -ulr
-    - bin/behat -f progress
+    - vendor/bin/atoum -ulr
+    - vendor/bin/behat -f progress

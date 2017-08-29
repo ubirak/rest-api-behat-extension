@@ -67,6 +67,7 @@ class Json extends atoum
 
     public function test_should_read_valid_expression()
     {
+        $stringAsserterFunc = class_exists('mageekguy\\atoum\\asserters\\phpString') ? 'phpString' : 'string';
         $this
             ->given(
                 $accessor = PropertyAccess::createPropertyAccessor(),
@@ -75,7 +76,7 @@ class Json extends atoum
             ->when(
                 $result = $sut->read('foo', $accessor)
             )
-                ->phpString($result)
+                ->$stringAsserterFunc($result)
                     ->isEqualTo('bar')
         ;
     }

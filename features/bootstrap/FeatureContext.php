@@ -97,7 +97,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
             throw new \LogicException('Accepts only "fail" or "pass"');
         }
 
-        $this->asserter->phpString($this->getOutput())->contains((string) $string);
+        $stringAsserterFunc = class_exists('mageekguy\\atoum\\asserters\\phpString') ? 'phpString' : 'string';
+        $this->asserter->$stringAsserterFunc($this->getOutput())->contains((string) $string);
     }
 
     private function getExitCode()
