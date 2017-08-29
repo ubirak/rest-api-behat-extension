@@ -4,7 +4,7 @@ namespace Rezzza\RestApiBehatExtension;
 
 abstract class ExpectationFailed extends \Exception
 {
-    abstract function getContextText();
+    abstract public function getContextText();
 
     /**
      * Returns exception message with additional context info.
@@ -32,7 +32,7 @@ abstract class ExpectationFailed extends \Exception
      */
     protected function pipeString($string)
     {
-        return '|  '.strtr($string, array("\n" => "\n|  "));
+        return '|  '.strtr($string, ["\n" => "\n|  "]);
     }
 
     /**
