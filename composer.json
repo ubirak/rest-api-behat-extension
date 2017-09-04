@@ -29,7 +29,7 @@
         "mtdowling/jmespath.php": "^2.3"
     },
     "require-dev": {
-        "silex/silex": "~1.0",
+        "silex/silex": "~2.0",
         "symfony/process": "~2.1|~3.0",
         "guzzlehttp/psr7": "^1.3",
         "php-http/curl-client": "^1.5",
