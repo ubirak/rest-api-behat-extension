@@ -11,7 +11,7 @@ use Tolerance\Operation\Callback;
 use Tolerance\Operation\Runner\RetryOperationRunner;
 use Tolerance\Operation\Runner\CallbackOperationRunner;
 use Tolerance\Waiter\SleepWaiter;
-use Rezzza\RestApiBehatExtension\Tolerance\ExecutionTimeLimited;
+use Tolerance\Waiter\TimeOut;
 
 class RestApiBrowser
 {
@@ -47,7 +47,7 @@ class RestApiBrowser
     }
 
     /**
-     * Allow to override the httpClient to use yours with specific middleware for example
+     * Allow to override the httpClient to use yours with specific middleware for example.
      */
     public function useHttpClient(HttpClient $httpClient)
     {
@@ -89,8 +89,8 @@ class RestApiBrowser
     }
 
     /**
-     * @param string $method
-     * @param string $uri
+     * @param string       $method
+     * @param string       $uri
      * @param string|array $body
      */
     public function sendRequest($method, $uri, $body = null)
@@ -112,7 +112,7 @@ class RestApiBrowser
     {
         $runner = new RetryOperationRunner(
             new CallbackOperationRunner(),
-            new ExecutionTimeLimited(new SleepWaiter(), $maxExecutionTime)
+            new TimeOut(new SleepWaiter(), $maxExecutionTime)
         );
         $restApiBrowser = $this;
         $runner->run(new Callback(function () use ($restApiBrowser, $method, $uri, $body, $assertion) {
