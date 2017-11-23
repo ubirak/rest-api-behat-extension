@@ -45,6 +45,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $this->assert(function () use ($jsonNode, $expectedValue) {
             $realValue = $this->evaluateJsonNodeValue($jsonNode);
+            $expectedValue = $this->evaluateExpectedValue($expectedValue);
             $this->asserter->variable($realValue)->isEqualTo($expectedValue);
         });
     }
@@ -233,6 +234,19 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         return $this->jsonInspector->readJsonNodeValue($jsonNode);
     }
+    
+    private function evaluateExpectedValue($expectedValue) 
+    {
+        if (in_array($expectedValue, array('true', 'false'))) {
+            return filter_var($expectedValue, FILTER_VALIDATE_BOOLEAN);
+        }
+        
+        if ($expectedValue === 'null') {
+            return null;
+        }
+
+        return $expectedValue;
+    }    
 
     private function readJson()
     {
