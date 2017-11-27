@@ -10,8 +10,9 @@ php:
     - nightly
 env:
     matrix:
+        - COMPOSER_PREFER=""
         - COMPOSER_PREFER="--prefer-stable"
-        - COMPOSER_PREFER="--prefer-lowest"
+        - COMPOSER_PREFER="--prefer-lowest --prefer-stable"
 matrix:
     allow_failures:
         -
