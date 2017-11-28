@@ -9,8 +9,16 @@
             "type": "string",
             "required": true
         },
-        "foofoo": {
+        "footrue": {
             "type": "boolean",
+            "required": true
+        },
+        "foofalse": {
+            "type": "boolean",
+            "required": true
+        },
+        "foonull": {
+            "type": "null",
             "required": true
         },
         "fooint": {
