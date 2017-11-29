@@ -1,3 +1,4 @@
+@json_inspection
 Feature: Test json inspection payload
     In order to verify my json response
     As a developper
@@ -8,7 +9,9 @@ Feature: Test json inspection payload
             """
             {
                 "foo": "bar",
-                "foofoo": true,
+                "footrue": true,
+                "foofalse": false,
+                "foonull": null,
                 "fooint": 1337,
                 "foos": [
                     {"foo": "bar", "bar": "bar"},
@@ -26,7 +29,9 @@ Feature: Test json inspection payload
 
     Scenario: Json nodes should be equal to specific values
         Then the JSON node "foo" should be equal to "bar"
-        And the JSON node "foofoo" should be equal to "true"
+        And the JSON node "footrue" should be equal to "true"
+        And the JSON node "foofalse" should be equal to "false"
+        And the JSON node "foonull" should be equal to "null"
         And the JSON node "fooint" should be equal to "1337"
         And the JSON node "foos[0].foo" should be equal to "bar"
         And the JSON node "fooo.foo" should be equal to "bar"
@@ -53,7 +58,9 @@ Feature: Test json inspection payload
 
     Scenario: Json nodes should exist
         Then the JSON node "foo" should exist
-        And the JSON node "foofoo" should exist
+        And the JSON node "footrue" should exist
+        And the JSON node "foofalse" should exist
+        And the JSON node "foonull" should exist
         And the JSON node "fooint" should exist
         And the JSON node "foos[0].foo" should exist
         And the JSON node "foos" should exist
@@ -80,8 +87,16 @@ Feature: Test json inspection payload
                         "type": "string",
                         "required": true
                     },
-                    "foofoo": {
+                    "footrue": {
                         "type": "boolean",
+                        "required": true
+                    },
+                    "foofalse": {
+                        "type": "boolean",
+                        "required": true
+                    },
+                    "foonull": {
+                        "type": "null",
                         "required": true
                     },
                     "fooint": {
@@ -108,7 +123,9 @@ Feature: Test json inspection payload
         """
         {
             "foo": "bar",
-            "foofoo": true,
+            "footrue": true,
+            "foofalse": false,
+            "foonull": null,
             "fooint": 1337,
             "foos": [
                 {"foo": "bar", "bar": "bar"},
