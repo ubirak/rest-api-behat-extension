@@ -12,7 +12,7 @@ Feature: Test json inspection edge cases
                     contexts:
                         - Rezzza\RestApiBehatExtension\RestApiContext
                         - Rezzza\RestApiBehatExtension\Json\JsonContext:
-                            jsonSchemaBaseUrl: %paths.base%/features/bootstrap
+                            jsonSchemaBaseUrl: '%paths.base%/features/bootstrap'
 
             extensions:
                 Rezzza\RestApiBehatExtension\Extension:
