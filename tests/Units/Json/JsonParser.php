@@ -1,10 +1,10 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Tests\Units\Json;
+namespace Ubirak\RestApiBehatExtension\Tests\Units\Json;
 
 use atoum;
 use JsonSchema\Validator;
-use Rezzza\RestApiBehatExtension\Json\JsonParser as SUT;
+use Ubirak\RestApiBehatExtension\Json\JsonParser as SUT;
 
 class JsonParser extends atoum
 {
@@ -12,7 +12,7 @@ class JsonParser extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Ubirak\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -36,7 +36,7 @@ class JsonParser extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Ubirak\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read->throw = new \Exception()
             )
             ->and(
@@ -53,7 +53,7 @@ class JsonParser extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Ubirak\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -77,7 +77,7 @@ class JsonParser extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
+                $json = new \mock\Ubirak\RestApiBehatExtension\Json\Json('{}'),
                 $json->getMockController()->read = 'foobar'
             )
             ->and(
@@ -101,8 +101,8 @@ class JsonParser extends atoum
     {
         $this
             ->given(
-                $json = new \mock\Rezzza\RestApiBehatExtension\Json\Json('{}'),
-                $schema = new \mock\Rezzza\RestApiBehatExtension\Json\JsonSchema('{}'),
+                $json = new \mock\Ubirak\RestApiBehatExtension\Json\Json('{}'),
+                $schema = new \mock\Ubirak\RestApiBehatExtension\Json\JsonSchema('{}'),
                 $schema->getMockController()->validate = 'foobar',
                 $sut = new SUT('foo')
             )
@@ -115,7 +115,7 @@ class JsonParser extends atoum
 
                 ->mock($schema)
                     ->call('validate')
-                    ->withArguments($json, new Validator)
+                    ->withArguments($json, new Validator())
                     ->once()
         ;
     }

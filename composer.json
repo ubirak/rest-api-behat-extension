@@ -16,7 +16,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Rezzza\\RestApiBehatExtension\\": "src/" }
+        "psr-4": { "Ubirak\\RestApiBehatExtension\\": "src/" }
     },
     "minimum-stability": "dev",
     "require": {

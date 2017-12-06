@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Rest;
+namespace Ubirak\RestApiBehatExtension\Rest;
 
 use Behat\Behat\Context\Argument\ArgumentResolver;
 
@@ -22,7 +22,7 @@ class RestApiBrowserResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getClass() && $parameter->getClass()->name === 'Rezzza\RestApiBehatExtension\Rest\RestApiBrowser') {
+            if (null !== $parameter->getClass() && $parameter->getClass()->name === 'Ubirak\RestApiBehatExtension\Rest\RestApiBrowser') {
                 $arguments[$parameter->name] = $this->restApiBrowser;
             }
         }

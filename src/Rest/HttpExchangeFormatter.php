@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Rest;
+namespace Ubirak\RestApiBehatExtension\Rest;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
@@ -51,13 +51,14 @@ class HttpExchangeFormatter
 
     /**
      * @param array $headers
+     *
      * @return string
      */
     private function getRawHeaders(array $headers)
     {
         $rawHeaders = '';
         foreach ($headers as $key => $value) {
-            $rawHeaders .= sprintf("%s: %s\n", $key, is_array($value) ? implode(", ", $value) : $value);
+            $rawHeaders .= sprintf("%s: %s\n", $key, is_array($value) ? implode(', ', $value) : $value);
         }
         $rawHeaders .= "\n";
 

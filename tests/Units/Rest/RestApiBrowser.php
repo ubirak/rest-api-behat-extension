@@ -1,9 +1,9 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Tests\Units\Rest;
+namespace Ubirak\RestApiBehatExtension\Tests\Units\Rest;
 
 use atoum;
-use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser as SUT;
+use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser as SUT;
 
 /**
  * @author Mikaël FIMA <mika@verylastroom.com>
@@ -12,7 +12,8 @@ use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser as SUT;
 class RestApiBrowser extends atoum
 {
     /**
-     * Adding headers
+     * Adding headers.
+     *
      * @dataProvider addHeaderDataProvider
      */
     public function testAddRequestHeader(array $addHeadersSteps, array $expectedHeaders)
@@ -25,7 +26,7 @@ class RestApiBrowser extends atoum
         ;
 
         foreach ($addHeadersSteps as $addHeadersStep) {
-            foreach($addHeadersStep as $headerName => $headerValue) {
+            foreach ($addHeadersStep as $headerName => $headerValue) {
                 $sut->addRequestHeader($headerName, $headerValue);
             }
         }
@@ -39,13 +40,14 @@ class RestApiBrowser extends atoum
     {
         return [
             [[], []],
-            [[["name" => "value"]], ["name" => "value"]],
-            [[["name" => "value"], ["name" => "value2"]], ["name" => "value, value2"]],
+            [[['name' => 'value']], ['name' => 'value']],
+            [[['name' => 'value'], ['name' => 'value2']], ['name' => 'value, value2']],
         ];
     }
 
     /**
-     * Setting headers
+     * Setting headers.
+     *
      * @dataProvider setHeaderDataProvider
      */
     public function testSetRequestHeader(array $setHeadersSteps, array $expectedHeaders)
@@ -58,7 +60,7 @@ class RestApiBrowser extends atoum
         ;
 
         foreach ($setHeadersSteps as $addHeadersStep) {
-            foreach($addHeadersStep as $headerName => $headerValue) {
+            foreach ($addHeadersStep as $headerName => $headerValue) {
                 $this->and($sut->setRequestHeader($headerName, $headerValue));
             }
         }
@@ -72,13 +74,14 @@ class RestApiBrowser extends atoum
     {
         return [
             [[], []],
-            [[["name" => "value"]], ["name" => "value"]],
-            [[["name" => "value"], ["name" => "value2"]], ["name" => "value2"]],
+            [[['name' => 'value']], ['name' => 'value']],
+            [[['name' => 'value'], ['name' => 'value2']], ['name' => 'value2']],
         ];
     }
 
     /**
      * @dataProvider urlWithSlashesProvider
+     *
      * @param string $baseUrl
      * @param string $stepUrl
      * @param string $expectedUrl
@@ -101,28 +104,29 @@ class RestApiBrowser extends atoum
             [ // Trim right + left
                 'baseUrl' => 'http://verylastroom.com/',
                 'stepUrl' => '/contact/',
-                'expectedUrl' => 'http://verylastroom.com/contact/'
+                'expectedUrl' => 'http://verylastroom.com/contact/',
             ],
             [ // Trim left
                 'baseUrl' => 'http://verylastroom.com',
                 'stepUrl' => '/contact/',
-                'expectedUrl' => 'http://verylastroom.com/contact/'
+                'expectedUrl' => 'http://verylastroom.com/contact/',
             ],
             [ // Trim right
                 'baseUrl' => 'http://verylastroom.com/',
                 'stepUrl' => 'contact/',
-                'expectedUrl' => 'http://verylastroom.com/contact/'
+                'expectedUrl' => 'http://verylastroom.com/contact/',
             ],
             [ // Add missing slash
                 'baseUrl' => 'http://verylastroom.com',
                 'stepUrl' => 'contact/',
-                'expectedUrl' => 'http://verylastroom.com/contact/'
-            ]
+                'expectedUrl' => 'http://verylastroom.com/contact/',
+            ],
         ];
     }
 
     /**
      * @dataProvider responseDataProvider
+     *
      * @param int   $statusCode
      * @param array $responseHeaders
      */
@@ -149,30 +153,30 @@ class RestApiBrowser extends atoum
             [
                 'statusCode' => 200,
                 'responseHeaders' => [
-                    "name" => "value"
-                ]
+                    'name' => 'value',
+                ],
             ],
             [
                 'statusCode' => 400,
                 'responseHeaders' => [
-                    "name1" => "value1",
-                    "name2" => "value2"
-                ]
-            ]
+                    'name1' => 'value1',
+                    'name2' => 'value2',
+                ],
+            ],
         ];
     }
 
     /**
      * @param string $baseUrl
-     * @param int $responseStatusCode
-     * @param array $headers
+     * @param int    $responseStatusCode
+     * @param array  $headers
      *
      * @return \Ivory\HttpAdapter\HttpAdapterInterface
      */
     private function mockHttpClient($responseStatusCode, array $headers = [])
     {
-        $mockHttpClient = new \Http\Mock\Client;
-        $messageFactory = new \Http\Message\MessageFactory\GuzzleMessageFactory;
+        $mockHttpClient = new \Http\Mock\Client();
+        $messageFactory = new \Http\Message\MessageFactory\GuzzleMessageFactory();
         $mockHttpClient->addResponse(
             $messageFactory->createResponse(
                 $responseStatusCode,

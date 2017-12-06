@@ -1,8 +1,8 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Rest;
+namespace Ubirak\RestApiBehatExtension\Rest;
 
-use Rezzza\RestApiBehatExtension\ExpectationFailed;
+use Ubirak\RestApiBehatExtension\ExpectationFailed;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
 

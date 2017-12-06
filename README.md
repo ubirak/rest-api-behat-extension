@@ -1,10 +1,10 @@
 # RestApiExtension for Behat
-* [Branch behat2](https://github.com/rezzza/rest-api-behat-extension/tree/behat-2.x) : **Behat 2.x**
-* [Branch master](https://github.com/rezzza/rest-api-behat-extension/tree/master) : **Behat 3.x**
+* [Branch behat2](https://github.com/ubirak/rest-api-behat-extension/tree/behat-2.x) : **Behat 2.x**
+* [Branch master](https://github.com/ubirak/rest-api-behat-extension/tree/master) : **Behat 3.x**
 
-[![Build Status](https://travis-ci.org/rezzza/rest-api-behat-extension.png?branch=master)](https://travis-ci.org/rezzza/rest-api-behat-extension)
+[![Build Status](https://travis-ci.org/ubirak/rest-api-behat-extension.png?branch=master)](https://travis-ci.org/ubirak/rest-api-behat-extension)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/rest-api-behat-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/rest-api-behat-extension/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ubirak/rest-api-behat-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ubirak/rest-api-behat-extension/?branch=master)
 
 For now only JSON api is supported to analyze response, but you could use REST part to perform request on any type of api.
 
@@ -13,22 +13,22 @@ For now only JSON api is supported to analyze response, but you could use REST p
 Require the package as a development dependency :
 
 ```sh
-composer require --dev rezzza/rest-api-behat-extension
+composer require --dev ubirak/rest-api-behat-extension
 ```
 
 Don't forget to load the extension and the context if needed in your `behat.yml` :
 ```yaml
 default:
     extensions:
-        Rezzza\RestApiBehatExtension\Extension:
+        Ubirak\RestApiBehatExtension\Extension:
             rest:
                 base_url: http://localhost:8888
                 store_response: true
     suites:
         default:
             contexts:
-                - Rezzza\RestApiBehatExtension\RestApiContext
-                - Rezzza\RestApiBehatExtension\Json\JsonContext
+                - Ubirak\RestApiBehatExtension\RestApiContext
+                - Ubirak\RestApiBehatExtension\Json\JsonContext
 ```
 
 Then you will need to require in your composer the http client you want to use, and the message factory.
@@ -45,8 +45,8 @@ You can use directly the `JsonContext` or `RestApiContext` by loading them in yo
 <?php
 /**/
 
-use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
-use Rezzza\RestApiBehatExtension\Json\JsonInspector;
+use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
+use Ubirak\RestApiBehatExtension\Json\JsonInspector;
 
 class FeatureContext implements Context
 {

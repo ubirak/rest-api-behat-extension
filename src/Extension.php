@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension;
+namespace Ubirak\RestApiBehatExtension;
 
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
@@ -14,13 +14,13 @@ class Extension implements ExtensionInterface
 {
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->setParameter('rezzza.json_api.rest.base_url', $config['rest']['base_url']);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/Resources'));
+        $container->setParameter('ubirak.json_api.rest.base_url', $config['rest']['base_url']);
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/Resources'));
         $loader->load('services.xml');
 
         if (true === $config['rest']['store_response']) {
-            $definitionRestApiBrowser = $container->findDefinition('rezzza.json_api.rest.rest_api_browser');
-            $definitionRestApiBrowser->addMethodCall('enableResponseStorage', [new Reference('rezzza.json_api.json.json_storage')]);
+            $definitionRestApiBrowser = $container->findDefinition('ubirak.json_api.rest.rest_api_browser');
+            $definitionRestApiBrowser->addMethodCall('enableResponseStorage', [new Reference('ubirak.json_api.json.json_storage')]);
         }
     }
 
@@ -55,4 +55,3 @@ class Extension implements ExtensionInterface
     {
     }
 }
-

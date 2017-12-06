@@ -1,15 +1,13 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension;
+namespace Ubirak\RestApiBehatExtension;
 
 use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
+use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
 
 class RestApiContext implements Context, SnippetAcceptingContext
 {
@@ -20,7 +18,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     public function __construct(RestApiBrowser $restApiBrowser)
     {
         $this->restApiBrowser = $restApiBrowser;
-        $this->asserter = new asserter\generator;
+        $this->asserter = new asserter\generator();
     }
 
     /**
@@ -38,7 +36,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      * Sends HTTP request to specific URL with raw body from PyString.
      *
      * @param string       $method request method
-     * @param string       $url relative url
+     * @param string       $url    relative url
      * @param PyStringNode $body
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
@@ -89,14 +87,14 @@ class RestApiContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * Set login / password for next HTTP authentication
+     * Set login / password for next HTTP authentication.
      *
      * @When /^I set basic authentication with "(?P<username>[^"]*)" and "(?P<password>[^"]*)"$/
      */
     public function iSetBasicAuthenticationWithAnd($username, $password)
     {
-        $authorization = base64_encode($username . ':' . $password);
-        $this->restApiBrowser->setRequestHeader('Authorization', 'Basic ' . $authorization);
+        $authorization = base64_encode($username.':'.$password);
+        $this->restApiBrowser->setRequestHeader('Authorization', 'Basic '.$authorization);
     }
 
     /**

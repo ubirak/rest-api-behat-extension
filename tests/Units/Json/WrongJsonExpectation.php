@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Tests\Units\Json;
+namespace Ubirak\RestApiBehatExtension\Tests\Units\Json;
 
 use atoum;
 
@@ -10,7 +10,7 @@ class WrongJsonExpectation extends atoum
     {
         $this
             ->given(
-                $json = new \Rezzza\RestApiBehatExtension\Json\Json('{"foo":"bar"}'),
+                $json = new \Ubirak\RestApiBehatExtension\Json\Json('{"foo":"bar"}'),
                 $this->newTestedInstance('Error', $json)
             )
             ->when(
@@ -18,7 +18,7 @@ class WrongJsonExpectation extends atoum
             )
             ->then
                 ->string($result)
-                    ->contains(<<<EOF
+                    ->contains(<<<'EOF'
 |  {
 |      "foo": "bar"
 |  }

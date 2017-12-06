@@ -1,8 +1,8 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
-use Rezzza\RestApiBehatExtension\ExpectationFailed;
+use Ubirak\RestApiBehatExtension\ExpectationFailed;
 
 class WrongJsonExpectation extends ExpectationFailed
 {

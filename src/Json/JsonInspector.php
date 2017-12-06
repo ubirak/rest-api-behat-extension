@@ -1,9 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
-
-use JsonSchema\Validator;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+namespace Ubirak\RestApiBehatExtension\Json;
 
 class JsonInspector
 {
