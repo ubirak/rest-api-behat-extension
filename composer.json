@@ -1,18 +1,15 @@
 {
-    "name": "ubirak/rest-api-behat-extension",
-    "replace": {
-        "rezzza/json-api-behat-extension": "self.version",
-        "rezzza/rest-api-behat-extension": "self.version"
-    },
+    "name": "rezzza/rest-api-behat-extension",
+    "replace": { "rezzza/json-api-behat-extension": "self.version" },
     "type": "behat-extension",
     "description": "Rest Api Extension for Behat",
     "keywords": ["api", "json", "rest", "test"],
     "license": "MIT",
-    "homepage": "https://github.com/ubirak/rest-api-behat-extension",
+    "homepage": "https://github.com/rezzza/rest-api-behat-extension",
     "authors": [
         {
             "name": "Community contributors",
-            "homepage": "https://github.com/ubirak/rest-api-behat-extension/contributors"
+            "homepage": "https://github.com/rezzza/rest-api-behat-extension/contributors"
         }
     ],
     "autoload": {
