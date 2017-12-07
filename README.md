@@ -8,6 +8,10 @@
 
 For now only JSON api is supported to analyze response, but you could use REST part to perform request on any type of api.
 
+## Warning
+
+From version `7.0`, namespace vendor changed from `Rezzza` to `Ubirak`.
+
 ## Install
 
 Require the package as a development dependency :
