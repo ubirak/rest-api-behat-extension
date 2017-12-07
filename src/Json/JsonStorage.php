@@ -1,11 +1,11 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
-use Rezzza\RestApiBehatExtension\Rest\ResponseStorage;
+use Ubirak\RestApiBehatExtension\Rest\ResponseStorage;
 
 /**
- * Store the JSON that we could analyze it in JsonContext
+ * Store the JSON that we could analyze it in JsonContext.
  */
 class JsonStorage implements ResponseStorage
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
 use JsonSchema\Validator;
 use JsonSchema\SchemaStorage;
@@ -38,6 +38,6 @@ class JsonParser
 
     public function validate(Json $json, JsonSchema $schema)
     {
-        return $schema->validate($json, new Validator, new SchemaStorage(new UriRetriever, new UriResolver));
+        return $schema->validate($json, new Validator(), new SchemaStorage(new UriRetriever(), new UriResolver()));
     }
 }

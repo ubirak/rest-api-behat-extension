@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 

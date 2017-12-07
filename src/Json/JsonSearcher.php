@@ -1,10 +1,10 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
 /**
  * Use https://github.com/jmespath/jmespath.php
- * alternative could be https://github.com/FlowCommunications/JSONPath
+ * alternative could be https://github.com/FlowCommunications/JSONPath.
  */
 class JsonSearcher
 {

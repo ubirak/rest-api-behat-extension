@@ -8,14 +8,14 @@ Feature: Send request until
             """
             default:
                 extensions:
-                    Rezzza\RestApiBehatExtension\Extension:
+                    Ubirak\RestApiBehatExtension\Extension:
                         rest:
                             base_url: http://localhost:8888
                 suites:
                     default:
                         contexts:
                             - FeatureContext
-                            - Rezzza\RestApiBehatExtension\RestApiContext
+                            - Ubirak\RestApiBehatExtension\RestApiContext
             """
 
     Scenario: Send request until it works
@@ -36,7 +36,7 @@ Feature: Send request until
             """
             <?php
             use Behat\Behat\Context\Context;
-            use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
+            use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
             use mageekguy\atoum\asserter;
 
             class FeatureContext implements Context
@@ -88,7 +88,7 @@ Feature: Send request until
             """
             <?php
             use Behat\Behat\Context\Context;
-            use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
+            use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
             use mageekguy\atoum\asserter;
 
             class FeatureContext implements Context

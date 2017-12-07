@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Json;
+namespace Ubirak\RestApiBehatExtension\Json;
 
 use mageekguy\atoum\asserter\generator as asserter;
 use Behat\Behat\Context\Context;
@@ -18,7 +18,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     public function __construct(JsonInspector $jsonInspector, $jsonSchemaBaseUrl = null)
     {
         $this->jsonInspector = $jsonInspector;
-        $this->asserter = new asserter;
+        $this->asserter = new asserter();
         $this->jsonSchemaBaseUrl = rtrim($jsonSchemaBaseUrl, '/');
     }
 
@@ -96,7 +96,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * Checks, that given JSON node does not contain given value
+     * Checks, that given JSON node does not contain given value.
      *
      * @Then /^the JSON node "(?P<jsonNode>[^"]*)" should not contain "(?P<unexpectedValue>.*)"$/
      */
@@ -109,7 +109,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * Checks, that given JSON node exist
+     * Checks, that given JSON node exist.
      *
      * @Given /^the JSON node "(?P<jsonNode>[^"]*)" should exist$/
      */
@@ -123,7 +123,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * Checks, that given JSON node does not exist
+     * Checks, that given JSON node does not exist.
      *
      * @Given /^the JSON node "(?P<jsonNode>[^"]*)" should not exist$/
      */
@@ -234,19 +234,19 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         return $this->jsonInspector->readJsonNodeValue($jsonNode);
     }
-    
-    private function evaluateExpectedValue($expectedValue) 
+
+    private function evaluateExpectedValue($expectedValue)
     {
         if (in_array($expectedValue, array('true', 'false'))) {
             return filter_var($expectedValue, FILTER_VALIDATE_BOOLEAN);
         }
-        
+
         if ($expectedValue === 'null') {
             return null;
         }
 
         return $expectedValue;
-    }    
+    }
 
     private function readJson()
     {
@@ -266,7 +266,7 @@ class JsonContext implements Context, SnippetAcceptingContext
             ));
         }
 
-        $filename = $this->jsonSchemaBaseUrl . '/' . $filename;
+        $filename = $this->jsonSchemaBaseUrl.'/'.$filename;
 
         if (false === is_file($filename)) {
             throw new \RuntimeException(sprintf(

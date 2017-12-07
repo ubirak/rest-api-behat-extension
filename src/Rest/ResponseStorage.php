@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension\Rest;
+namespace Ubirak\RestApiBehatExtension\Rest;
 
 interface ResponseStorage
 {

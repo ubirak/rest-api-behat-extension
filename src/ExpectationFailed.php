@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\RestApiBehatExtension;
+namespace Ubirak\RestApiBehatExtension;
 
 abstract class ExpectationFailed extends \Exception
 {
