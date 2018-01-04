@@ -27,6 +27,12 @@ class RestApiBrowser
     /** @var array */
     private $requestHeaders = [];
 
+    /** @var array */
+    private $requestMultiparts = [];
+    
+    /** @var array */
+    private $requestFiles = [];
+
     /** @var ResponseStorage */
     private $responseStorage;
 
@@ -83,7 +89,7 @@ class RestApiBrowser
         return $this->request;
     }
 
-    public function getRequestHeaders()
+    public function getRequestHeaders() 
     {
         return $this->requestHeaders;
     }
@@ -97,9 +103,13 @@ class RestApiBrowser
     {
         if (false === $this->hasHost($uri)) {
             $uri = rtrim($this->host, '/').'/'.ltrim($uri, '/');
+        }        
+        
+        if (count($this->requestFiles)) {
+            $body = $this->getBodyAsMultipartFormData($body);            
         }
 
-        $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);
+        $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);        
         $this->response = $this->httpClient->sendRequest($this->request);
         $this->requestHeaders = [];
 
@@ -138,6 +148,7 @@ class RestApiBrowser
      */
     public function addRequestHeader($name, $value)
     {
+        $name = strtolower($name);
         if (isset($this->requestHeaders[$name])) {
             $this->requestHeaders[$name] .= ', '.$value;
         } else {
@@ -150,10 +161,69 @@ class RestApiBrowser
      */
     private function removeRequestHeader($headerName)
     {
+        $headerName = strtolower($headerName);
         if (array_key_exists($headerName, $this->requestHeaders)) {
             unset($this->requestHeaders[$headerName]);
         }
     }
+
+    /**     
+     * @param string $name
+     * @param string|stream $contents
+     */     
+    private function addRequestMultipart($name, $contents) {
+        $multipart = [];
+        $multipart['name'] = $name;
+        $multipart['contents'] = $contents;
+        $this->requestMultiparts[] = $multipart;
+    }
+    
+    /**     
+     * @param string $name
+     * @param string $path
+     */
+    public function addFileToRequest($name, $path) {
+        $file = [];
+        $file['name'] = $name;
+        $file['path'] = $path;
+        $this->requestFiles[] = $file;
+    }
+    
+    /**     
+     * @param string $body
+     * @return \GuzzleHttp\Psr7\MultipartStream
+     */
+    private function getBodyAsMultipartFormData($body) {
+        if ($body) {                               
+            $this->transformRequestJsonBodyIntoMultipart($body);
+        }
+        $this->transformRequestFilesIntoMultipart();
+            
+        $boundary = sha1(uniqid('', true));        
+        $this->setRequestHeader('Content-Type', 'multipart/form-data; boundary='.$boundary);        
+        return new \GuzzleHttp\Psr7\MultipartStream($this->requestMultiparts, $boundary);
+    }
+    
+    /**     
+     * @param string|array $body
+     */
+    private function transformRequestJsonBodyIntoMultipart($body) {        
+       
+        $fields = json_decode($body, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            return false;
+        }
+        
+        foreach($fields as $name => $contents) {
+            $this->addRequestMultipart($name, $contents);
+        }
+    }
+    
+    private function transformRequestFilesIntoMultipart() {
+        foreach($this->requestFiles as $file) {
+            $this->addRequestMultipart($file['name'], fopen($file['path'], 'r'));
+        }
+    }    
 
     /**
      * @param string $uri

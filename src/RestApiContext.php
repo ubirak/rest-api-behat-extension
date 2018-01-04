@@ -6,16 +6,17 @@ use mageekguy\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 use Psr\Http\Message\ResponseInterface;
 use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
 
-class RestApiContext implements Context, SnippetAcceptingContext
-{
+class RestApiContext implements Context, SnippetAcceptingContext 
+    {
     private $asserter;
-
+    
     private $restApiBrowser;
 
-    public function __construct(RestApiBrowser $restApiBrowser)
+    public function __construct(RestApiBrowser $restApiBrowser) 
     {
         $this->restApiBrowser = $restApiBrowser;
         $this->asserter = new asserter\generator();
@@ -27,7 +28,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
      */
-    public function iSendARequest($method, $url)
+    public function iSendARequest($method, $url) 
     {
         $this->restApiBrowser->sendRequest($method, $url);
     }
@@ -41,9 +42,19 @@ class RestApiContext implements Context, SnippetAcceptingContext
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
      */
-    public function iSendARequestWithBody($method, $url, PyStringNode $body)
+    public function iSendARequestWithBody($method, $url, PyStringNode $body) 
     {
         $this->restApiBrowser->sendRequest($method, $url, (string) $body);
+    }
+
+    /**
+     * @When I attach the following files:
+     */
+    public function iAttachTheFollowingFiles(TableNode $files) 
+    {
+        foreach ($files as $file) {            
+            $this->restApiBrowser->addFileToRequest($file['name'], $file['path']);            
+        }        
     }
 
     /**
@@ -51,7 +62,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      *
      * @Then /^(?:the )?response status code should be (\d+)$/
      */
-    public function theResponseCodeShouldBe($code)
+    public function theResponseCodeShouldBe($code) 
     {
         $expected = intval($code);
         $actual = intval($this->getResponse()->getStatusCode());
@@ -65,7 +76,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @return ResponseInterface
      */
-    private function getResponse()
+    private function getResponse() 
     {
         return $this->restApiBrowser->getResponse();
     }
@@ -73,7 +84,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @Given /^I set "([^"]*)" header equal to "([^"]*)"$/
      */
-    public function iSetHeaderEqualTo($headerName, $headerValue)
+    public function iSetHeaderEqualTo($headerName, $headerValue) 
     {
         $this->restApiBrowser->setRequestHeader($headerName, $headerValue);
     }
@@ -81,7 +92,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @Given /^I add "([^"]*)" header equal to "([^"]*)"$/
      */
-    public function iAddHeaderEqualTo($headerName, $headerValue)
+    public function iAddHeaderEqualTo($headerName, $headerValue) 
     {
         $this->restApiBrowser->addRequestHeader($headerName, $headerValue);
     }
@@ -91,7 +102,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
      *
      * @When /^I set basic authentication with "(?P<username>[^"]*)" and "(?P<password>[^"]*)"$/
      */
-    public function iSetBasicAuthenticationWithAnd($username, $password)
+    public function iSetBasicAuthenticationWithAnd($username, $password) 
     {
         $authorization = base64_encode($username.':'.$password);
         $this->restApiBrowser->setRequestHeader('Authorization', 'Basic '.$authorization);
