@@ -40,7 +40,8 @@ Feature: Test send API request
     Then the response status code should be 200
     And the JSON node "headers.header" should have 1 element
     And the JSON node "headers.header[0]" should be equal to "value2"
-  
+
+  @issue-87
   Scenario: Attaching files and sending POST request(sequence of steps important!).
     The request is sent as HTML form with 'Content-Type	multipart/form-data; ' header, even if set  different.
 
@@ -58,6 +59,8 @@ Feature: Test send API request
       }
       """
     Then the response status code should be 200
-    Then the response should be in JSON
+    And the response should be in JSON
     And the JSON node "post_files_count" should be equal to "2"
     And the JSON node "post_fields_count" should be equal to "3"
+    And the JSON node "content_type_header_value" should not contain "application/json"
+    And the JSON node "content_type_header_value" should contain "multipart/form-data"

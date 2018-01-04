@@ -75,6 +75,7 @@ $app->match(
     $ret = [];
     $ret['post_files_count'] = count($_FILES);
     $ret['post_fields_count'] = count($_POST);
+    $ret['content_type_header_value'] = $request->headers->get('content-type');
     
     return new JsonResponse($ret);
 }
