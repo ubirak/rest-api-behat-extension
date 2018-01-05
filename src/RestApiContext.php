@@ -8,6 +8,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Psr\Http\Message\ResponseInterface;
 use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
+use Behat\Gherkin\Node\TableNode;
 
 class RestApiContext implements Context, SnippetAcceptingContext
 {
@@ -44,6 +45,30 @@ class RestApiContext implements Context, SnippetAcceptingContext
     public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
         $this->restApiBrowser->sendRequest($method, $url, (string) $body);
+    }
+
+    /**
+     * Sends HTTP request to specific URL with raw body from PyString.
+     *
+     * @param string    $method     request method
+     * @param string    $url        relative url
+     * @param TableNode $parameters
+     *
+     * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with parameters:$/
+     */
+    public function iSendARequestWithParameters($method, $url, TableNode $parameters = null)
+    {
+        $this->restApiBrowser->sendRequest($method, $url, $parameters->getRowsHash());
+    }
+
+    /**
+     * @When I attach the following files:
+     */
+    public function iAttachTheFollowingFiles(TableNode $files)
+    {
+        foreach ($files as $file) {
+            $this->restApiBrowser->addFileToRequest($file['name'], $file['path']);
+        }
     }
 
     /**
