@@ -27,6 +27,9 @@ class RestApiBrowser
     /** @var array */
     private $requestHeaders = [];
 
+    /** @var array */
+    private $requestFiles = [];
+
     /** @var ResponseStorage */
     private $responseStorage;
 
@@ -99,6 +102,10 @@ class RestApiBrowser
             $uri = rtrim($this->host, '/').'/'.ltrim($uri, '/');
         }
 
+        if (is_array($body)) {
+            $body = $this->buildMultipartBody($body);
+        }
+
         $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);
         $this->response = $this->httpClient->sendRequest($this->request);
         $this->requestHeaders = [];
@@ -138,6 +145,7 @@ class RestApiBrowser
      */
     public function addRequestHeader($name, $value)
     {
+        $name = strtolower($name);
         if (isset($this->requestHeaders[$name])) {
             $this->requestHeaders[$name] .= ', '.$value;
         } else {
@@ -150,9 +158,51 @@ class RestApiBrowser
      */
     private function removeRequestHeader($headerName)
     {
+        $headerName = strtolower($headerName);
         if (array_key_exists($headerName, $this->requestHeaders)) {
             unset($this->requestHeaders[$headerName]);
         }
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     */
+    public function addFileToRequest($name, $path)
+    {
+        $this->requestFiles[] = [
+            'name' => $name,
+            'path' => $path,
+        ];
+    }
+
+    /**
+     * @param array $body
+     *
+     * @return \GuzzleHttp\Psr7\MultipartStream
+     */
+    private function buildMultipartBody($body)
+    {
+        $multiparts = array_merge(
+            array_map(
+                function ($key, $value) {
+                    return ['name' => $key, 'contents' => $value];
+                },
+                array_keys($body),
+                $body
+            ),
+            array_map(
+                function ($file) {
+                    return ['name' => $file['name'], 'contents' => fopen($file['path'], 'r')];
+                },
+                $this->requestFiles
+            )
+        );
+
+        $boundary = sha1(uniqid('', true));
+        $this->setRequestHeader('Content-Type', 'multipart/form-data; boundary='.$boundary);
+
+        return new \GuzzleHttp\Psr7\MultipartStream($multiparts, $boundary);
     }
 
     /**
@@ -162,6 +212,6 @@ class RestApiBrowser
      */
     private function hasHost($uri)
     {
-        return strpos($uri, '://') !== false;
+        return false !== strpos($uri, '://');
     }
 }

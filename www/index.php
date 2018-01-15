@@ -1,20 +1,18 @@
 <?php
 
 /**
- * Totally copied from https://github.com/Behat/WebApiExtension
+ * Totally copied from https://github.com/Behat/WebApiExtension.
  */
-
-use Silex\Application;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
 $app->match(
     'echo',
-    function(Request $req) {
+    function (Request $req) {
         $ret = array(
             'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
         );
@@ -57,7 +55,7 @@ $app->match(
 $app->match(
     'error_random',
     function (Request $request) {
-        $statusCode = time() % 3 <= 0 ? 200 : 502 ;
+        $statusCode = time() % 3 <= 0 ? 200 : 502;
 
         return new JsonResponse([], $statusCode);
     }
@@ -66,6 +64,17 @@ $app->match(
     'always_error',
     function (Request $request) {
         return new JsonResponse([], 502);
+    }
+);
+
+$app->match(
+    'post-with-files',
+    function (Request $request) {
+        return new JsonResponse([
+            'content_type_header_value' => $request->headers->get('content-type'),
+            'post_files_count' => count($request->files),
+            'post_fields' => $request->request->all(),
+        ]);
     }
 );
 
