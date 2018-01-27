@@ -20,15 +20,27 @@ class Form {
         return $this->getNameValuePairBody();
     }
 
-    public function getContentTypeHeaderValue(): string {
+    /**
+     * 
+     * @return string
+     */
+    public function getContentTypeHeaderValue() {
         return $this->contentTypeHeaderValue;
     }
 
-    private function setContentTypeHeaderValue(string $value) {
+    /**
+     * 
+     * @param string $value
+     */
+    private function setContentTypeHeaderValue($value) {
         $this->contentTypeHeaderValue = $value;
     }
 
-    private function bodyHasFileObject(): bool {
+    /**
+     * 
+     * @return boolean
+     */
+    private function bodyHasFileObject() {
 
         foreach ($this->body as $element) {
             if ($element['object'] == 'file') {
@@ -39,7 +51,11 @@ class Form {
         return false;
     }
 
-    private function getMultipartStreamBody(): \GuzzleHttp\Psr7\MultipartStream {
+    /**
+     * 
+     * @return \GuzzleHttp\Psr7\MultipartStream
+     */
+    private function getMultipartStreamBody() {
 
         $multiparts = array_map(
                 function ($element) {
@@ -59,7 +75,11 @@ class Form {
         return new \GuzzleHttp\Psr7\MultipartStream($multiparts, $boundary);
     }
 
-    private function getNameValuePairBody(): string {
+    /**
+     * 
+     * @return string
+     */
+    private function getNameValuePairBody() {
 
         $body = [];
         foreach ($this->body as $element) {
@@ -68,8 +88,7 @@ class Form {
 
         $this->setContentTypeHeaderValue('application/x-www-form-urlencoded');
 
-        return http_build_query($body, null, '&');
-        ;
+        return http_build_query($body, null, '&');       
     }
 
 }
