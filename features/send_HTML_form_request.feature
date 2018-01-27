@@ -1,4 +1,4 @@
-Feature: Test request to API sent like HTML form
+Feature: Test request to API sent like a HTML form
   In order to test my API
   As a developper
   I want to be able to perform HTTP request with HTML form data
