@@ -3,7 +3,7 @@ Feature: Test request to API sent like a HTML form
   As a developper
   I want to be able to perform HTTP request with HTML form data
 
-  Scenario: Sending POST request as HTML form
+  Scenario: Sending POST request as a HTML form
     When I send a POST request to "post-html-form" as HTML form with body:
       | object | name           | value |
       | field  | username       | pablo |
@@ -17,7 +17,7 @@ Feature: Test request to API sent like a HTML form
     And the JSON node "post_fields.password" should be equal to "money"
     And the JSON node "post_fields.terms_accepted" should be equal to "1"
 
-  Scenario: Sending POST request as HTML form with files
+  Scenario: Sending POST request as a HTML form with files
     When I send a POST request to "post-html-form-with-files" as HTML form with body:
       | object | name           | value                                        |
       | field  | username       | pablo                                        |
