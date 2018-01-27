@@ -68,11 +68,23 @@ $app->match(
 );
 
 $app->match(
-    'post-with-files',
-    function (Request $request) {
+    'post-html-form',
+    function (Request $request) {   
+        return new JsonResponse([
+            'content_type_header_value' => $request->headers->get('content-type'),
+            'post_fields_count' => $request->request->count(),
+            'post_fields' => $request->request->all(),
+        ]);
+    }
+);
+
+$app->match(
+    'post-html-form-with-files',
+    function (Request $request) {   
         return new JsonResponse([
             'content_type_header_value' => $request->headers->get('content-type'),
             'post_files_count' => count($request->files),
+            'post_fields_count' => $request->request->count(),
             'post_fields' => $request->request->all(),
         ]);
     }
