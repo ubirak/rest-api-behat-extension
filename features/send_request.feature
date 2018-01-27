@@ -40,22 +40,4 @@ Feature: Test send API request
         Then the response status code should be 200
         And the JSON node "headers.header" should have 1 element
         And the JSON node "headers.header[0]" should be equal to "value2"
-
-    Scenario: Attaching files and sending POST request
-        Given I add "Content-type" header equal to "application/json"
-        And I attach the following files:
-          | name        | path                                         |
-          | json-schema | features/bootstrap/fixtures/json-schema.json |
-          | test-img    | features/bootstrap/fixtures/test-img.jpg     |
-        When I send a POST request to "post-with-files" with parameters:
-            | username       | pablo |
-            | password       | money |
-            | terms_accepted | 1     |
-        Then the response status code should be 200
-        And the response should be in JSON
-        And the JSON node "post_files_count" should be equal to "2"
-        And the JSON node "post_fields.username" should be equal to "pablo"
-        And the JSON node "post_fields.password" should be equal to "money"
-        And the JSON node "post_fields.terms_accepted" should be equal to "1"
-        And the JSON node "content_type_header_value" should not contain "application/json"
-        And the JSON node "content_type_header_value" should contain "multipart/form-data"
+        
