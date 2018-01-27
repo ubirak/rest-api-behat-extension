@@ -4,7 +4,7 @@ Feature: Test send API request as HTML form
   I want to be able to perform HTTP request with HTML form data
 
   Scenario: Sending POST request as HTML form
-    When I send a POST request to "post-html-form" as HTML form with data:
+    When I send a POST request to "post-html-form" as HTML form with body:
       | object | name           | value |
       | field  | username       | pablo |
       | field  | password       | money |
