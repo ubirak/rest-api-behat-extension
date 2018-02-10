@@ -9,7 +9,7 @@ Feature: Test request to API sent like a HTML form
       | field  | username       | pablo |
       | field  | password       | money |
       | field  | terms_accepted | 1     |
-    Then the response status code should be 200
+    Then the rest response status code should be 200
     And the response should be in JSON
     And the JSON node "content_type_header_value" should contain "application/x-www-form-urlencoded"
     And the JSON node "post_fields_count" should be equal to "3"
@@ -25,7 +25,7 @@ Feature: Test request to API sent like a HTML form
       | field  | terms_accepted | 1                                            |
       | file   | test-img       | features/bootstrap/fixtures/test-img.jpg     |
       | file   | json-schema    | features/bootstrap/fixtures/json-schema.json |
-    Then the response status code should be 200
+    Then the rest response status code should be 200
     And the response should be in JSON
     And the JSON node "content_type_header_value" should contain "multipart/form-data"
     And the JSON node "post_fields_count" should be equal to "3"

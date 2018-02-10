@@ -5,11 +5,11 @@ Feature: Test send API request
 
     Scenario: Sending GET request to non existing ressource should lead to 404
         When I send a GET request to "simpson.json"
-        Then the response status code should be 404
+        Then the rest response status code should be 404
 
     Scenario: Sending GET request to existing ressource should lead to 200
         When I send a GET request to "echo"
-        Then the response status code should be 200
+        Then the rest response status code should be 200
 
     Scenario: Sending POST request with body
         Given I add "content-type" header equal to "application/json"
@@ -29,7 +29,7 @@ Feature: Test send API request
         Given I add "header" header equal to "value"
         And I add "header" header equal to "value2"
         When I send a POST request to "echo"
-        Then the response status code should be 200
+        Then the rest response status code should be 200
         And the JSON node "headers.header" should have 1 element
         And the JSON node "headers.header[0]" should be equal to "value, value2"
 
@@ -37,7 +37,6 @@ Feature: Test send API request
         Given I set "header" header equal to "value"
         And I set "header" header equal to "value2"
         When I send a POST request to "echo"
-        Then the response status code should be 200
+        Then the rest response status code should be 200
         And the JSON node "headers.header" should have 1 element
         And the JSON node "headers.header[0]" should be equal to "value2"
-        

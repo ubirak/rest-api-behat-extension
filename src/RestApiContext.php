@@ -68,7 +68,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @param string $code status code
      *
-     * @Then /^(?:the )?response status code should be (\d+)$/
+     * @Then /^(?:the )rest ?response status code should be (\d+)$/
      */
     public function theResponseCodeShouldBe($code)
     {
