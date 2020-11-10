@@ -143,6 +143,7 @@ Feature: Test json inspection payload
 
     Scenario: JSON path expression equal to inline json
         Then the JSON path expression "foos[?foo == 'bar'].bar" should be equal to json '["bar"]'
+        Then the JSON path expression "foos[?foo == 'nobar'].bar" should be equal to json '[]'
 
     Scenario: JSON path expression equal to given json
         Then the JSON path expression "foos[?foo == 'bar'].bar" should be equal to:
