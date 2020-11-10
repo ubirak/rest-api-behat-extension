@@ -1,4 +1,4 @@
-@json_inspection @wip
+@json_inspection
 Feature: Test json inspection payload
     In order to verify my json response
     As a developper
