@@ -1,4 +1,4 @@
-@json_inspection
+@json_inspection @wip
 Feature: Test json inspection payload
     In order to verify my json response
     As a developper
@@ -155,3 +155,4 @@ Feature: Test json inspection payload
 
     Scenario: JSON path expression have result
         Then the JSON path expression "fooo.bar" should not have result
+        Then the JSON path expression "foos[?foo == 'nobar'].bar" should not have result

@@ -219,6 +219,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $json = $this->jsonInspector->searchJsonPath($pathExpression);
         $this->asserter->variable($json)->isNotNull();
+        $this->asserter->variable($json)->isNotEqualTo([]);
     }
 
     /**
@@ -227,7 +228,11 @@ class JsonContext implements Context, SnippetAcceptingContext
     public function theJsonPathExpressionShouldNotHaveResult($pathExpression)
     {
         $json = $this->jsonInspector->searchJsonPath($pathExpression);
-        $this->asserter->variable($json)->isNull();
+        if (is_array($json) && empty($json)) {
+          $this->asserter->variable($json)->isEqualTo([]);
+        } else {
+          $this->asserter->variable($json)->isNull();
+        }
     }
 
     private function evaluateJsonNodeValue($jsonNode)
