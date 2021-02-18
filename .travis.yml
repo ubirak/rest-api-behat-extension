@@ -26,7 +26,6 @@ before_script:
         if [ ! $(php -m | grep -ci xdebug) -eq 0 ] ; then
             phpenv config-rm xdebug.ini
         fi
-    - composer global require hirak/prestissimo
     - composer update $COMPOSER_PREFER
     - |
         # We force latest atoum on php >=7
