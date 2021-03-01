@@ -37,7 +37,7 @@ Feature: Send request until
             <?php
             use Behat\Behat\Context\Context;
             use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
-            use mageekguy\atoum\asserter;
+            use atoum\atoum\asserter;
 
             class FeatureContext implements Context
             {
@@ -89,7 +89,7 @@ Feature: Send request until
             <?php
             use Behat\Behat\Context\Context;
             use Ubirak\RestApiBehatExtension\Rest\RestApiBrowser;
-            use mageekguy\atoum\asserter;
+            use atoum\atoum\asserter;
 
             class FeatureContext implements Context
             {

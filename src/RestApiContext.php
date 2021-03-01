@@ -2,7 +2,7 @@
 
 namespace Ubirak\RestApiBehatExtension;
 
-use mageekguy\atoum\asserter;
+use atoum\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
@@ -50,7 +50,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @When I send a POST request to :url as HTML form with body:
      */
-    public function iSendAPostRequestToAsHtmlFormWithBody($url, TableNode $body) 
+    public function iSendAPostRequestToAsHtmlFormWithBody($url, TableNode $body)
     {
         $formElements = [];
         foreach ($body as $element) {
