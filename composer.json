@@ -22,7 +22,7 @@
     "require": {
         "php": ">=5.6.0",
         "behat/behat": "~3.0",
-        "atoum/atoum": "~1.0|~2.0|~3.0|3.0.x-dev",
+        "atoum/atoum": "^4",
         "symfony/property-access": "~2.5|~3.0|~4.0",
         "justinrainbow/json-schema": ">=3.0 <6.0",
         "psr/http-message": "^1.0",

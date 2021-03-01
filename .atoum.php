@@ -1,5 +1,5 @@
 <?php
-use \mageekguy\atoum;
+use atoum\atoum;
 
 $runner->addTestsFromDirectory(__DIR__.'/tests/Units');
 
