@@ -2,7 +2,7 @@
 
 namespace Ubirak\RestApiBehatExtension\Json;
 
-use mageekguy\atoum\asserter\generator as asserter;
+use atoum\atoum\asserter\generator as asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;

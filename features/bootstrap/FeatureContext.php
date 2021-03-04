@@ -1,6 +1,6 @@
 <?php
 
-use mageekguy\atoum\asserter;
+use atoum\atoum\asserter;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
