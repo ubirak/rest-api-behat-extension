@@ -22,7 +22,7 @@ class RestApiBrowserResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getType() && ((string)$parameter->getType()) === 'Ubirak\RestApiBehatExtension\Rest\RestApiBrowser') {
+            if (null !== $parameter->getType() && ($parameter->getType()->getName()) === 'Ubirak\RestApiBehatExtension\Rest\RestApiBrowser') {
                 $arguments[$parameter->name] = $this->restApiBrowser;
             }
         }
