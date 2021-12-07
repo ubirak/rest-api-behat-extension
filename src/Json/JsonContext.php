@@ -19,7 +19,7 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $this->jsonInspector = $jsonInspector;
         $this->asserter = new asserter();
-        $this->jsonSchemaBaseUrl = rtrim($jsonSchemaBaseUrl, '/');
+        $this->jsonSchemaBaseUrl = rtrim((string) $jsonSchemaBaseUrl, '/');
     }
 
     /**
@@ -229,9 +229,9 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $json = $this->jsonInspector->searchJsonPath($pathExpression);
         if (is_array($json) && empty($json)) {
-          $this->asserter->variable($json)->isEqualTo([]);
+            $this->asserter->variable($json)->isEqualTo([]);
         } else {
-          $this->asserter->variable($json)->isNull();
+            $this->asserter->variable($json)->isNull();
         }
     }
 
