@@ -19,7 +19,11 @@ class JsonContext implements Context, SnippetAcceptingContext
     {
         $this->jsonInspector = $jsonInspector;
         $this->asserter = new asserter();
-        $this->jsonSchemaBaseUrl = rtrim((string) $jsonSchemaBaseUrl, '/');
+
+        if (null !== $jsonSchemaBaseUrl) {
+            $jsonSchemaBaseUrl = rtrim($jsonSchemaBaseUrl, '/');
+        }
+        $this->jsonSchemaBaseUrl = $jsonSchemaBaseUrl;
     }
 
     /**
