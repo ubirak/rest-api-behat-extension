@@ -2,18 +2,18 @@
 
 namespace Ubirak\RestApiBehatExtension\Html;
 
-class Form 
+class Form
 {
     private $body = [];
-    
+
     private $contentTypeHeaderValue = '';
 
-    public function __construct(array $body) 
+    public function __construct(array $body)
     {
         $this->body = $body;
     }
 
-    public function getBody() 
+    public function getBody()
     {
         if ($this->bodyHasFileObject()) {
             return $this->getMultipartStreamBody();
@@ -23,28 +23,28 @@ class Form
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    public function getContentTypeHeaderValue() 
+    public function getContentTypeHeaderValue()
     {
         return $this->contentTypeHeaderValue;
     }
 
     /**
-     * 
+     *
      * @param string $value
      */
-    private function setContentTypeHeaderValue($value) 
+    private function setContentTypeHeaderValue($value)
     {
         $this->contentTypeHeaderValue = $value;
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
-    private function bodyHasFileObject() 
+    private function bodyHasFileObject()
     {
         foreach ($this->body as $element) {
             if ($element['object'] == 'file') {
@@ -56,10 +56,10 @@ class Form
     }
 
     /**
-     * 
+     *
      * @return \GuzzleHttp\Psr7\MultipartStream
      */
-    private function getMultipartStreamBody() 
+    private function getMultipartStreamBody()
     {
         $multiparts = array_map(
                 function ($element) {
@@ -80,10 +80,10 @@ class Form
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    private function getNameValuePairBody() 
+    private function getNameValuePairBody()
     {
         $body = [];
         foreach ($this->body as $element) {
@@ -92,7 +92,7 @@ class Form
 
         $this->setContentTypeHeaderValue('application/x-www-form-urlencoded');
 
-        return http_build_query($body, null, '&');       
+        return http_build_query($body);
     }
 
 }
