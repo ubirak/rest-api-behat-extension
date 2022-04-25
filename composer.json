@@ -30,9 +30,9 @@
         "php-http/message": "^1.11",
         "tolerance/tolerance": "^0.4.2",
         "mtdowling/jmespath.php": "^2.3",
-        "symfony/config": "^4.4.12 | ~5.0",
-        "symfony/dependency-injection": "^4.4.12 | ~5.0",
-        "symfony/property-access": "^4.4.12 | ~5.0"
+        "symfony/config": "^4.4.12 | ~5.0 | ~6.0",
+        "symfony/dependency-injection": "^4.4.12 | ~5.0 | ~6.0",
+        "symfony/property-access": "^4.4.12 | ~5.0 | ~6.0"
     },
     "require-dev": {
         "silex/silex": "~2.0",
