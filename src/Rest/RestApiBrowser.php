@@ -2,9 +2,10 @@
 
 namespace Ubirak\RestApiBehatExtension\Rest;
 
-use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr17Factory;
+use Http\Discovery\Psr18ClientDiscovery;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tolerance\Operation\Callback;
@@ -15,7 +16,7 @@ use Tolerance\Waiter\TimeOut;
 
 class RestApiBrowser
 {
-    /** @var HttpClient */
+    /** @var ClientInterface */
     private $httpClient;
 
     /** @var RequestInterface */
@@ -33,23 +34,23 @@ class RestApiBrowser
     /** @var string */
     private $host;
 
-    /** @var MessageFactoryDiscovery */
+    /** @var RequestFactoryInterface */
     private $messageFactory;
 
     /**
      * @param string $host
      */
-    public function __construct($host, HttpClient $httpClient = null)
+    public function __construct($host, ClientInterface $httpClient = null)
     {
         $this->host = $host;
-        $this->httpClient = $httpClient ?: HttpClientDiscovery::find();
-        $this->messageFactory = MessageFactoryDiscovery::find();
+        $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
+        $this->messageFactory = new Psr17Factory();
     }
 
     /**
      * Allow to override the httpClient to use yours with specific middleware for example.
      */
-    public function useHttpClient(HttpClient $httpClient)
+    public function useHttpClient(ClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
     }
@@ -105,7 +106,14 @@ class RestApiBrowser
             $this->setRequestHeader('Content-Type', $html->getContentTypeHeaderValue());
         }
 
-        $this->request = $this->messageFactory->createRequest($method, $uri, $this->requestHeaders, $body);
+        $this->request = $this->messageFactory->createRequest($method, $uri);
+        foreach ($this->requestHeaders as $keyHeader => $valueHeader) {
+            $this->request = $this->request->withHeader($keyHeader, $valueHeader);
+        }
+        if (null !== $body) {
+            $this->request = $this->request->withBody($this->messageFactory->createStream($body));
+        }
+
         $this->response = $this->httpClient->sendRequest($this->request);
         $this->requestHeaders = [];
 

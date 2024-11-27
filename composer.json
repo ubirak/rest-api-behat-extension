@@ -45,6 +45,9 @@
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     },
     "extra": {
