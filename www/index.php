@@ -5,6 +5,7 @@
  */
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -87,6 +88,14 @@ $app->match(
             'post_fields_count' => $request->request->count(),
             'post_fields' => $request->request->all(),
         ]);
+    }
+);
+
+$app->match(
+    'response_content_plain_text_inspection',
+    function (Request $request) {   
+        $data = json_decode($request->getContent(), true);    
+        return new Response($data['plain_text_value_i_want_to_have_in_response_body_content'], 200);
     }
 );
 
