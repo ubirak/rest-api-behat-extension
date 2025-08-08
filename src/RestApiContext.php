@@ -12,9 +12,9 @@ use Behat\Gherkin\Node\TableNode;
 
 class RestApiContext implements Context, SnippetAcceptingContext
 {
-    private $asserter;
+    protected $asserter;
 
-    private $restApiBrowser;
+    protected $restApiBrowser;
 
     public function __construct(RestApiBrowser $restApiBrowser)
     {
@@ -84,7 +84,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
     /**
      * @return ResponseInterface
      */
-    private function getResponse()
+    protected function getResponse()
     {
         return $this->restApiBrowser->getResponse();
     }
@@ -144,7 +144,7 @@ class RestApiContext implements Context, SnippetAcceptingContext
         echo $this->buildHttpExchangeFormatter()->formatFullExchange();
     }
 
-    private function buildHttpExchangeFormatter()
+    protected function buildHttpExchangeFormatter()
     {
         return new Rest\HttpExchangeFormatter($this->restApiBrowser->getRequest(), $this->getResponse());
     }
