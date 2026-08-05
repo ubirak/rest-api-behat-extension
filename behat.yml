@@ -4,6 +4,7 @@ default:
             contexts:
                 - FeatureContext
                 - Ubirak\RestApiBehatExtension\RestApiContext
+                - Ubirak\RestApiBehatExtension\Response\ResponseContext
                 - Ubirak\RestApiBehatExtension\Json\JsonContext:
                     jsonSchemaBaseUrl: '%paths.base%/features/bootstrap'
 
