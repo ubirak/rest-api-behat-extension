@@ -40,7 +40,7 @@ class RestApiBrowser
     /**
      * @param string $host
      */
-    public function __construct($host, ClientInterface $httpClient = null)
+    public function __construct($host, ?ClientInterface $httpClient = null)
     {
         $this->host = $host;
         $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
